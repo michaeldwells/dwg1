@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Federo&family=Forum&family=Urbanist:wght@100&display=swap');
+
+/*
 @font-face {
   font-family: "Urbanist";
   src: url("Urbanist-VariableFont_wght.ttf");
@@ -10,6 +13,7 @@
   font-family: "Federo";
   src: url("Federo-Regular.ttf");
 }
+*/
 
 :root {
 	--bg-color: #222;
@@ -84,7 +88,7 @@ html {
 body {
 	height: 95%;
 	font-size: var(--font-big);
-	font-family: Urbanist;
+	font-family: Urbanist, sans-serif;
 	font-weight: lighter;
 	background: var(--bg-color);
 	color: var(--fg-color);
@@ -99,7 +103,7 @@ body {
 	flex-direction: column;
 	transition: filter 0.5s;
 	font-size: var(--font-small);
-	font-family: Forum;
+	font-family: Forum, serif;
 	text-align: center;
 }
 div.leftside:hover {
@@ -297,7 +301,7 @@ div.middle ::selection {
 	padding: 1em;
 	background: var(--pop-bg-color);
 	border: 0.2rem double var(--pop-ac-color);
-	font-family: Federo;
+	font-family: Federo, sans-serif;
 	text-align: center;
 }
 #results p {

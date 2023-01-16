@@ -102,7 +102,11 @@ class Grid {
 //			LOGS(minAnswer);
 			return true;
 		}
+		
+		/* EPIC DICTIONARY REMOVED *****************************
 		if (typeof dictionaryEpic === "undefined") return false;
+		*******************************************************/
+		
 		if (tiles.length < 8) {
 			let used = answers.rounds.flat();
 //			LOG("------");
@@ -125,7 +129,7 @@ class Grid {
 //						LOG(" - "+word);
 						if (!used.includes(word)) {
 							if (dictionary.has(word)) return false;
-							if (word.length > 4 && dictionaryEpic.has(word)) return false;
+							//if (word.length > 4 && dictionaryEpic.has(word)) return false;
 						}
 					}
 				}
@@ -170,8 +174,10 @@ class Guess {
 	lookup() {
 		let found = this.word.length >= minAnswer;
 		found &&= dictionary.has(this.word);
+		/*
 		if ((this.word.length > 4) && (typeof dictionaryEpic !== "undefined"))
 			found ||= dictionaryEpic.has(this.word);
+		*/
 		return found;
 	}
 	submit(answers) {

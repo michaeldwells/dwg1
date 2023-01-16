@@ -1,0 +1,308 @@
+@font-face {
+  font-family: "Urbanist";
+  src: url("Urbanist-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: "Forum";
+  src: url("Forum-Regular.ttf");
+}
+@font-face {
+  font-family: "Federo";
+  src: url("Federo-Regular.ttf");
+}
+
+:root {
+	--bg-color: #222;
+	--fg-color: #eee;
+	--ac-color: #999;
+	--pop-bg-color: #221e;
+	--pop-ac-color: #fe8;
+	--basis: min(100vh, 100vw);
+	--font-big: calc(var(--basis) / 25);
+	--font-small: calc(var(--basis) / 50);
+	--line-thin: calc(var(--basis) / 1000);
+	--line-med: calc(var(--basis) / 500);
+	--margin-small: calc(var(--basis) / 20);
+	--margin-big: calc(var(--basis) / 10);
+}
+* {
+	box-sizing: border-box;
+}
+html {
+	height: 100%;
+}
+
+
+@media (min-aspect-ratio: 8/4) {
+	html {
+		overflow: visible hidden;
+	}
+	body {
+		flex-direction: row;
+		justify-content: center;
+	}
+	.leftside {
+		display: flex;
+	}
+	.rightside {
+		align-self: baseline;
+		margin-top: var(--margin-big);
+	}
+}
+@media (max-aspect-ratio: 8/4) and (min-aspect-ratio: 4/3) {
+	html {
+		overflow: visible hidden;
+	}
+	body {
+		flex-direction: row;
+		justify-content: center;
+	}
+	.leftside {
+		display: none;
+	}
+	.rightside {
+		align-self: baseline;
+		margin-top: var(--margin-big);
+	}
+}
+@media (max-aspect-ratio: 4/3) {
+	html {
+		overflow: hidden visible;
+	}
+	body {
+		flex-direction: column;
+		justify-content: start;
+	}
+	.leftside {
+		display: none;
+	}
+	.rightside {
+		margin-top: var(--margin-small);
+	}
+}
+
+body {
+	height: 95%;
+	font-size: var(--font-big);
+	font-family: Urbanist;
+	font-weight: lighter;
+	background: var(--bg-color);
+	color: var(--fg-color);
+	display: flex;
+	align-items: center;
+}
+
+.leftside {
+	padding-right: var(--margin-small);
+	margin: var(--margin-small);
+	width: max(13rem, 26em);
+	flex-direction: column;
+	transition: filter 0.5s;
+	font-size: var(--font-small);
+	font-family: Forum;
+	text-align: center;
+}
+div.leftside:hover {
+	filter: none;
+}
+.leftside h1 {
+	font-size: 150%;
+	font-weight: normal;
+}
+.leftside table{
+	font-size: inherit;
+	border-collapse: collapse;
+}
+.leftside table tr td {
+	border: dashed 0.02em var(--ac-color);
+}
+.leftside table tr td:nth-child(2) {
+	border-left: 0;
+}
+.leftside table tr:first-child td {
+	border-top: 0;
+}
+.leftside table tr td:last-child {
+	border-right: 0;
+}
+.leftside table tr:last-child td {
+	border-bottom: 0;
+}
+
+.middle {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+div.middle ::selection {
+	background: #0000;
+	color: var(--fg-color);
+}
+.gamegrid {
+	display: grid;
+	grid-template-columns: repeat(5, max-content)
+}
+.gamegrid > div {
+	transition: filter 0.2s;
+	width: 3.5em;
+	padding: 1.25em 0;
+	margin: 0;
+	text-align: center;
+	cursor: pointer;
+}
+.used {
+	filter: brightness(0.25) blur(0.05rem);
+}
+.footer {
+	display: flex;
+	margin: 1rem 0rem 0rem 1rem;
+	justify-content: center;
+}
+.footer > #guess  {
+	padding-bottom: 0.1rem;
+	border-bottom: solid 0.05rem;
+	margin-right: 0.2rem;
+	min-width: 6rem;
+	height: 1.2em;
+	font-family: Urbanist;
+	font-size: inherit;
+	font-weight: inherit;
+	color: var(--fg-color);
+	background: var(--bg-color);
+	border: none;
+	border-bottom: solid var(--ac-color) 0.05rem;
+}
+.footer.ready > #guess {
+	border-bottom-color: var(--fg-color);
+}
+#guess.short {
+	color: var(--ac-color);
+}
+.footer > #enter  {
+	color: var(--ac-color);
+}
+.footer.ready > #enter {
+	color: var(--fg-color);
+}
+#delete, #enter {
+	cursor: pointer;
+}
+#delete {
+	margin-left: 0.2rem;
+	margin-right: 3rem;
+}
+#delete::before {
+	content: "‹DEL";
+}
+#enter::before {
+	content: "ENTER›";
+}
+
+.rightside {
+	padding: var(--margin-small);
+	width: max(8rem, 16em);
+}
+#wordlist {
+	width: 100%;
+	margin-left: 1rem;
+	font-size: inherit;
+	font-weight: inherit;
+	border-collapse: collapse;
+}
+#wordlist tr {
+	height: 1.4em;
+	transition: border 2s;
+}
+#wordlist tbody tr:first-child {
+	border-bottom: 0 solid var(--bg-color);
+}
+#wordlist.sum tbody tr:first-child {
+	border-bottom: 0.05rem solid var(--ac-color);
+}
+#wordlist tbody tr:last-child {
+	border-bottom: 0 solid var(--bg-color);
+}
+#wordlist.sum tbody tr:last-child {
+	border-bottom: 0.05rem solid var(--ac-color);
+}
+#wordlist tr td:last-child {
+	text-align: right;
+}
+#wordlist.sum tbody tr:first-child td:last-child {
+	padding-right: 0.06em;
+}
+#wordlist.sum tbody tr:first-child:not(:only-child) td:last-child::after {
+	content: ' x';
+	color: var(--ac-color);
+}
+#wordlist.sum tbody tr.answerline:last-child:not(:nth-child(2)) td.score {
+	padding-right: 0;
+}
+#wordlist.sum tbody tr.answerline:last-child:not(:first-child):not(:nth-child(2)) td.score::after {
+	content: ' +';
+	color: var(--ac-color);
+}
+.answerline > .score {
+	padding-right: 0.81em;
+}
+#totalline {
+	text-align: right;
+}
+#shortwords {
+	border-top: solid 0.05rem;
+	filter: brightness(0.75) blur(0.03rem);
+	font-size: smaller;
+}
+#shortwords.empty {
+	border-top: none;
+	padding-top: 1.05rem;
+}
+#shortwords > span {
+	margin-right: 1em;
+	float: left;
+}
+#shortwords > div {
+	margin-right: 1em;
+	float: left;
+}
+#score {
+	cursor: pointer;
+	padding-right: 0.81em;
+}
+#score::before {
+	content: "score ";
+	color: var(--ac-color);
+}
+#score.hide {
+	display: none;
+}
+
+.popuplayer {
+	display: inherit;
+	position: absolute;
+	z-index: 10;
+	width: 100%;
+	height: 95%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.popuplayer.hidden {
+	display: none;
+}
+#scorelayer {
+	cursor: pointer;
+}
+#results {
+	padding: 1em;
+	background: var(--pop-bg-color);
+	border: 0.2rem double var(--pop-ac-color);
+	font-family: Federo;
+	text-align: center;
+}
+#results p {
+	margin: 0.5em;
+}
+#finalscore {
+	font-size: xxx-large;
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Disappointing Word Game Number One</title>
+<link rel="stylesheet" type="text/css" href="dwg1.css" />
+</head>
+<body>
+<div class="leftside">
+<h1>+ How to Play +</h1>
+
+<p>Use letters from the grid to form words. 
+Each letter can only be used once, except for the 
+center square which will be available for every 
+word.</p>
+
+<p>Words score points based on their lengths. The 
+first three letters of each word score zero. The 
+next three letters score one point each. Then two 
+points each for the next three, and so on.</p>
+
+<table>
+<tr>
+<th>Word Length</th>
+<td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
+<td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+<td>11</td><td>12</td><td>13</td><td>14</td><td>15</td>
+</tr>
+<tr>
+<th>Score</th>
+<td>0</td><td>0</td><td>0</td><td>1</td><td>2</td>
+<td>3</td><td>5</td><td>7</td><td>9</td><td>12</td>
+<td>15</td><td>18</td><td>22</td><td>26</td><td>30</td>
+</tr>
+</table>
+
+<p>The score for the round will be your longest 
+word multiplied by your other words added 
+together.</p>
+
+<p>If you clear the board, it will reset, and the 
+minimum word length (indicated by undescores) 
+will go up by one. Scores from each round will be 
+added together.</p>
+
+<p>Good luck!</p>
+</div>
+<div class="middle">
+	<div class="gamegrid" id="grid"></div>
+	<div class="footer">
+		<input type="text" size="14" id="guess" class="short" autocomplete="off" disabled="true">
+		<div id="delete"></div>
+		<div id="enter"></div>
+	</div>
+</div>
+<div class="rightside">
+	<table id="wordlist">
+		<tbody>
+		</tbody>
+		<tfoot>
+			<tr id="totalline">
+				<td id="score" colspan="2" class="hide"></td>
+			</tr>
+		</tfoot>
+	</table>
+	<div id="shortwords" class="empty"></div>
+</div>
+<div id="scorelayer" class="popuplayer hidden">
+	<div id="results">
+		<p></p>
+		<p id="finalscore">Final score: 0</p>
+		<p></p>
+	</div>
+</div>
+
+<script src="dollar.js"></script>
+
+<script src="common.lengths.js"></script>
+<script>const common = range(18).flatMap(x=>commonLengths[x+1]);</script>
+<script src="rare.js"></script>
+<script>const dictionary = new Set([...common, ...rare]);</script>
+<script src="tris.js"></script>
+<!--<script src="unique.lengths.js"></script>-->
+<!--<script src="uniques.6789.js"></script>-->
+<script src="uniques.ingless.js"></script>
+<script src="zxqj.lengths.js"></script>
+
+<script src="dwg1.js"></script>
+
+<script src="epic.js"></script>
+<script>const dictionaryEpic=new Set(epic);</script>
+</body>

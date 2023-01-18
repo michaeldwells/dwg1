@@ -3,7 +3,7 @@ const letterRanks = {
 'F':18,'G':12,'H':16,'I':2, 'J':26,
 'K':22,'L':9, 'M':15,'N':4, 'O':8,
 'P':14,'Q':25,'R':5, 'S':3, 'T':7,
-'U':13,'V':20,'W':21,'X':24,'Y':19,'Z':23};
+'U':13,'V':20,'W':21,'X':24,'Y':19,'Z':23,'Qu':25};
 
 const wordlist = new Array();
 const SCORING_WORDS = 3;
@@ -46,13 +46,20 @@ class Grid {
 		}
 		$.id("guess").value = "".padEnd(minAnswer, "_");
 
-		let word1 = this.randomWord(9);					LOG(word1);
-		let word2 = this.randomWord(8);					LOG(word2);
-		let word3 = this.randomWord(7, true);			LOG(word3);
+		let word1 = this.randomWord(8);
+		let word2 = this.randomWord(7, true);
+		let word3 = this.randomWord(9 + [...word1, ...word2].filter(x=>x=="Q").length);
+		while ([...word3].filter(x=>x=="Q").length > 0)
+			word3 = this.randomWord(9 + [...word1, ...word2].filter(x=>x=="Q").length);
+		LOG(word1);
+		LOG(word2);
+		LOG(word3);
 		
 		this.letters = [...word1, ...word2, ...word3];
+		for (let i of this.letters.keys())
+			if (this.letters[i]=="Q" && this.letters[i+1]=="U") this.letters.splice(i, 2, "Qu");
+		this.letters = [...this.letters, ...this.randomWord(24 - this.letters.length)];
 		this.letters.sort((a,b) => letterRanks[a]-letterRanks[b]);
-		for (let i of this.letters.keys()) if (this.letters[i]=="Q") this.letters[i]="Qu";
 
 		let easy = [2,10,14,22,6,8,16,18,7,11,13,17];
 		let mid = [1,3,5,9,15,19,21,23];
@@ -76,6 +83,7 @@ class Grid {
 		this.grid[cellId].onClick();
 	}
 	randomWord(l, x=false) {
+		if (l == 0) return "";
 		if (x) {
 			return zxqj[l][rnd(zxqj[l].length)];
 		}
@@ -211,14 +219,15 @@ class Answers {
 		this.usedWords = [];
 		this.score = 0;
 	}
-	scoring(r=0) {
-		return this.rounds[r].map(score).filter((x)=>x>0).sort((a,b)=>b-a);
-	}
+	scoring(r=0) {return this.rounds[r].map(score).filter((x)=>x>0).sort((a,b)=>b-a);}
+	roundScore(r) {return (r[0] || 0)*r.slice(1).reduce((x,y) => x+y, 1);}
 	updateScore() {
 		let s = this.rounds.map((x,i)=>this.scoring(i));
-		this.score = s.map(x=>(x[0] || 0)*x.slice(1).reduce((x,y) => x+y, 0)).reduce((a,v)=>a+v,0);
-		$.id("score").classList.toggle("hide", this.score < 1);
+		this.score = s.map(x=>this.roundScore(x)).reduce((a,v)=>a+v,0);
 		$.id("score").innerHTML = this.score.toString();
+		$.id("score").classList.toggle("hide", this.score < 1);
+		$.id("subtotal").innerHTML = s.slice(1).map(x=>this.roundScore(x)).reduce((a,v)=>a+v,0).toString();
+		$.id("subtotalline").classList.toggle("hide", (this.rounds.length < 2) || (this.rounds[0].length == 0));
 	}
 	add(word) {
 		if (this.words.has(word)) return false;
@@ -232,6 +241,12 @@ class Answers {
 					   ["td",{"class":"word"},word],
 					   ["td",{"class":"score"},s.toString()]
 				  ], "#wordlist > tbody");
+			if (this.scoring().length == 1) {
+				$.new(["tr",{"class":"answerline"},
+						   ["td",{"class":"word"}],
+						   ["td",{"class":"score"},"1"]
+					  ], "#wordlist > tbody");
+			}
 		}
 		if (grid.isClear()) {
 			this.usedWords = this.rounds.flat();
@@ -245,15 +260,17 @@ class Answers {
 		return true;
 	}
 	updateDisplay() {
-		let words = this.rounds[0];
+		let words = Array.from(this.rounds[0]);
 		words.sort((a,b) => b.length - a.length);
 		$.id("shortwords").innerHTML = "";
+		let n = 1;
 		for (let i of words.keys()) {
 			let s = score(words[i]);
 			if (s > 0) {
-				let e = $.q("#wordlist tbody tr:nth-child("+(i+1).toString()+")")[0];
+				let e = $.q("#wordlist tbody tr:nth-child("+(i+n).toString()+")")[0];
 				e.querySelector("td:first-child").innerHTML = words[i];
 				e.querySelector("td:last-child").innerHTML = s.toString();
+				if (n == 1) n = 2;
 			} else {
 				$.new(["div", words[i]], "#shortwords");
 			}
@@ -261,19 +278,43 @@ class Answers {
 		for (let w of this.usedWords) {
 			$.new(["div", w], "#shortwords");
 		}
-		$.id("wordlist").classList.toggle("sum", words.length > 1);
+		$.id("wordlist").classList.toggle("sum", words.length > 0);
 		
 		if (grid.isDone()) {
 			this.showScore();
 		}
 	}
 	showScore() {
+		$.id("finalsum").innerHTML = "";
+		$.id("finalscore").innerHTML = "";
+		$.id("finalwords").innerHTML = "";
+		let e0 = $.new(["table"],"#finalsum");
+		for (let i0 of [...this.rounds.keys()].reverse()) {
+			let r = this.scoring(i0);
+			let e1 = $.new(["tr"], e0);
+			let e2;
+			for (let i1 of r.keys()) {
+				if (i1 == 0) {
+					e2 = $.new(["td",r[i1].toString() + " x ( 1"], e1);
+				} else {
+					e2.innerHTML +=  " + " + r[i1].toString();
+				}
+			}
+			if (typeof(e2) !== "undefined")
+				e2.innerHTML +=  " ) = " + this.roundScore(r).toString();
+		}
 		$.id("finalscore").innerHTML = "Score: "+this.score.toString();
-		$.id("scorelayer").classList.remove("hidden");
+		this.rounds.flat().forEach(x => $.new(["span",x], "#finalwords"));
+		$.id("scorelayer").classList.remove("hide");
 	}
 	hideScore() {
-		$.id("scorelayer").classList.add("hidden");
+		$.id("scorelayer").classList.add("hide");
 	}
+}
+
+function toggleHelpLayer() {
+	$.class('leftside')[0].classList.toggle('hidelayer');
+	$.id('helpbutton').classList.toggle('hidelayer');
 }
 
 const grid = new Grid();
@@ -283,3 +324,5 @@ $.id("delete").setAttribute("onClick", "guess.remove()");
 $.id("enter").setAttribute("onClick", "guess.submit(answers)");
 $.id("score").setAttribute("onClick", "answers.showScore()");
 $.id("scorelayer").setAttribute("onClick", "answers.hideScore()");
+$.class("leftside")[0].setAttribute("onClick", "toggleHelpLayer();");
+$.id("helpbutton").setAttribute("onClick", "toggleHelpLayer();");

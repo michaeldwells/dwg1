@@ -5,6 +5,7 @@
 <link rel="stylesheet" type="text/css" href="dwg1.css" />
 </head>
 <body>
+<div id="helpbutton" class="hidelayer"></div>
 <div class="leftside">
 <h1>+ How to Play +</h1>
 
@@ -57,6 +58,9 @@ added together.</p>
 		<tbody>
 		</tbody>
 		<tfoot>
+			<tr id="subtotalline" class="hide">
+				<td id="subtotal" colspan="2"></td>
+			</tr>
 			<tr id="totalline">
 				<td id="score" colspan="2" class="hide"></td>
 			</tr>
@@ -64,11 +68,13 @@ added together.</p>
 	</table>
 	<div id="shortwords" class="empty"></div>
 </div>
-<div id="scorelayer" class="popuplayer hidden">
-	<div id="results">
-		<p></p>
-		<p id="finalscore">Final score: 0</p>
-		<p></p>
+<div id="scorelayer" class="popuplayer hide">
+	<div id="results-outer">
+		<div id="results-inner">
+			<p id="finalsum"></p>
+			<p id="finalscore">Score: 0</p>
+			<p id="finalwords"></p>
+		</div>
 	</div>
 </div>
 

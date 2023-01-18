@@ -42,7 +42,7 @@ class Grid {
 		this.center = 12;
 		this.grid = new Array(25);
 		for (let i of this.grid.keys()) {
-			$.new( ["div", {"id":"cell"+i.toString(), "onClick":"grid.onClick("+i.toString()+");"}," "] , "#grid");
+			$.new( ["button", {"id":"cell"+i.toString(), "onClick":"grid.onClick("+i.toString()+");"}," "] , "#grid");
 		}
 		$.id("guess").value = "".padEnd(minAnswer, "_");
 
@@ -242,8 +242,8 @@ class Answers {
 					   ["td",{"class":"score"},s.toString()]
 				  ], "#wordlist > tbody");
 			if (this.scoring().length == 1) {
-				$.new(["tr",{"class":"answerline"},
-						   ["td",{"class":"word"}],
+				$.new(["tr",{"class":"answerline bonusline"},
+						   ["td",{"class":"word"},"("+word.toLowerCase()+")"],
 						   ["td",{"class":"score"},"1"]
 					  ], "#wordlist > tbody");
 			}
@@ -270,7 +270,12 @@ class Answers {
 				let e = $.q("#wordlist tbody tr:nth-child("+(i+n).toString()+")")[0];
 				e.querySelector("td:first-child").innerHTML = words[i];
 				e.querySelector("td:last-child").innerHTML = s.toString();
-				if (n == 1) n = 2;
+				if (n == 1) {
+					n = 2;
+					e = $.q("#wordlist tbody tr:nth-child("+(i+n).toString()+")")[0];
+					e.querySelector("td:first-child").innerHTML = "("+words[i].toLowerCase()+")";
+					e.querySelector("td:last-child").innerHTML = "1";
+				}
 			} else {
 				$.new(["div", words[i]], "#shortwords");
 			}
@@ -326,3 +331,5 @@ $.id("score").setAttribute("onClick", "answers.showScore()");
 $.id("scorelayer").setAttribute("onClick", "answers.hideScore()");
 $.class("leftside")[0].setAttribute("onClick", "toggleHelpLayer();");
 $.id("helpbutton").setAttribute("onClick", "toggleHelpLayer();");
+$.class("middle")[0].classList.remove("hidelayer");
+setTimeout(()=>$.class("leftside")[0].classList.remove("hidelayer"), 200);

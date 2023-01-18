@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="helpbutton" class="hidelayer"></div>
-<div class="leftside">
+<div class="leftside hidelayer">
 <h1>+ How to Play +</h1>
 
 <p>Use letters from the grid to form words. 
@@ -14,10 +14,7 @@ Each letter can only be used once, except for the
 center square which will be available for every 
 word.</p>
 
-<p>Words score points based on their lengths. The 
-first three letters of each word score zero. The 
-next three letters score one point each. Then two 
-points each for the next three, and so on.</p>
+<p>Words score points based on their lengths.</p>
 
 <table>
 <tr>
@@ -34,22 +31,25 @@ points each for the next three, and so on.</p>
 </tr>
 </table>
 
-<p>The score for the round will be your longest 
+<p>The score for each round will be your longest 
 word multiplied by your other words added 
 together.</p>
 
-<p>If you clear the board, it will reset, and the 
-minimum word length (indicated by undescores) 
-will go up by one. Scores from each round will be 
-added together.</p>
+<p>If you clear the board (not including the 
+center square) it will reset, and the minimum word 
+length (indicated by undescores) will go up by one. 
+Scores from each round will be added together.</p>
 
-<p>Good luck!</p>
+<p>You can view your score summary any time by 
+clicking on your score. This screen will appear 
+automatically if the game thinks you're stuck. 
+Good luck!</p>
 </div>
-<div class="middle">
+<div class="middle hidelayer">
 	<div class="gamegrid" id="grid"></div>
 	<div class="footer">
 		<input type="text" size="14" id="guess" class="short" autocomplete="off" disabled="true">
-		<div id="delete"></div>
+		<button id="delete"></button>
 		<div id="enter"></div>
 	</div>
 </div>

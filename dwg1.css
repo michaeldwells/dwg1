@@ -19,15 +19,18 @@
 	--bg-color: #222;
 	--fg-color: #eee;
 	--ac-color: #999;
+	--used-color: #3d3d3d;
 	--pop-bg-color: #221e;
 	--pop-ac-color: #fe8;
-	--basis: min(100vh, 100vw);
-	--font-big: calc(var(--basis) / 25);
-	--font-small: calc(var(--basis) / 50);
+	--basis: min(80vh, 100vw);
+	--font-big: calc(var(--basis) / 20);
+	--font-small: calc(var(--basis) / 40);
 	--line-thin: calc(var(--basis) / 1000);
 	--line-med: calc(var(--basis) / 500);
 	--margin-small: calc(var(--basis) / 20);
 	--margin-big: calc(var(--basis) / 10);
+	--fade-delay: 0.8s;
+	--fade-delay-start: 0.4s;
 }
 * {
 	box-sizing: border-box;
@@ -61,9 +64,6 @@ html {
 		flex-direction: row;
 		justify-content: center;
 	}
-	/*.leftside {
-		display: none;
-	}*/
 	.rightside {
 		align-self: baseline;
 		margin-top: var(--margin-big);
@@ -77,18 +77,19 @@ html {
 		flex-direction: column;
 		justify-content: start;
 	}
-	/*.leftside {
-		display: none;
-	}*/
+	body div.leftside {
+		font-size: calc(var(--font-small) * 1.5);
+		width: 24em;
+		margin: 6em 0;
+	}
 	.rightside {
 		margin-top: var(--margin-small);
 	}
+	table#wordlist {
+		margin: 0;
+	}
 }
 @media (max-aspect-ratio: 8/4) {
-	div#helpbutton {
-		display: block;
-		color: var(--ac-color);
-	}
 	div.leftside {
 		display: flex;
 		position: absolute;
@@ -97,22 +98,15 @@ html {
 		height: max-content;
 		padding: 2em;
 		border: var(--line-thin) solid var(--pop-ac-color);
-		margin: 0;
+		margin: 2em 0;
 		background: var(--pop-bg-color);
 		color: var(--pop-ac-color);
-		cursor: pointer;
-	}
-	div#helpbutton.hidelayer {
-		display: none;
-	}
-	div.hidelayer {
-		display: none;
 	}
 }
 
-
 html body *.hide {
-	display: none;
+	visibility: hidden;
+	opacity: 0;
 }
 
 body {
@@ -127,7 +121,9 @@ body {
 }
 
 #helpbutton {
-	display: none;
+	display: block;
+	color: var(--ac-color);
+	transition: visibility var(--fade-delay), opacity var(--fade-delay);
 	position: absolute;
 	top: env(safe-area-inset-top);
 	left: env(safe-area-inset-right);
@@ -136,6 +132,10 @@ body {
 }
 #helpbutton::after {
 	content: "+";
+}
+div.hidelayer {
+	visibility: hidden;
+	opacity: 0;
 }
 
 .leftside {
@@ -147,6 +147,8 @@ body {
 	font-size: var(--font-small);
 	font-family: Forum, serif;
 	text-align: center;
+	cursor: pointer;
+	transition: visibility var(--fade-delay), opacity var(--fade-delay);
 }
 div.leftside:hover {
 	filter: none;
@@ -171,6 +173,7 @@ div.leftside:hover {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	transition: visibility var(--fade-delay-start), opacity var(--fade-delay-start);
 }
 div.middle ::selection {
 	background: #0000;
@@ -188,8 +191,26 @@ div.middle ::selection {
 	text-align: center;
 	cursor: pointer;
 }
-.used {
+.gamegrid > button {
+	transition: filter 0.2s;
+	width: 3.5em;
+	padding: 1.25em 0;
+	margin: 0;
+	text-align: center;
+	cursor: pointer;
+	color: var(--fg-color);
+	background-color: var(--bg-color);
+	font-family: Urbanist;
+	font-size: var(--font-big);
+	font-weight: initial;
+	border: none;
+}
+div.used {
 	filter: brightness(0.25) blur(0.05rem);
+}
+button.used {
+	filter: blur(0.05rem);
+	color: var(--used-color);
 }
 .footer {
 	display: flex;
@@ -226,8 +247,14 @@ div.middle ::selection {
 	cursor: pointer;
 }
 #delete {
+	border: none;
 	margin-left: 0.2rem;
 	margin-right: 3rem;
+	color: var(--fg-color);
+	background-color: var(--bg-color);
+	font-family: Urbanist;
+	font-size: var(--font-big);
+	font-weight: initial;
 }
 #delete::before {
 	content: "‹DEL";
@@ -283,6 +310,9 @@ div.middle ::selection {
 .answerline > .score {
 	padding-right: 0.81em;
 }
+.bonusline td:first-child {
+	color: var(--ac-color);
+}
 #totalline {
 	text-align: right;
 }
@@ -329,6 +359,7 @@ div.middle ::selection {
 	z-index: 10;
 	width: 100%;
 	height: 95%;
+	transition: visibility 1s, opacity 1s;
 }
 #scorelayer {
 	cursor: pointer;

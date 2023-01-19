@@ -22,9 +22,11 @@
 	--used-color: #3d3d3d;
 	--pop-bg-color: #221e;
 	--pop-ac-color: #fe8;
-	--basis: min(80vh, 100vw);
-	--font-big: calc(var(--basis) / 20);
-	--font-small: calc(var(--basis) / 40);
+	--basis: min(100vh, 100vw);
+	--basis-skewed: min(80vh, 100vw);
+	--font-huge: calc(var(--basis-skewed) / 15);
+	--font-big: calc(var(--basis-skewed) / 20);
+	--font-small: calc(var(--basis-skewed) / 40);
 	--line-thin: calc(var(--basis) / 1000);
 	--line-med: calc(var(--basis) / 500);
 	--margin-small: calc(var(--basis) / 20);
@@ -125,13 +127,15 @@ body {
 
 #helpbutton {
 	display: block;
-	color: var(--ac-color);
-	transition: visibility var(--fade-delay), opacity var(--fade-delay);
 	position: absolute;
+	z-index: 2;
 	top: env(safe-area-inset-top);
 	left: env(safe-area-inset-right);
 	margin: 1rem;
+	color: var(--ac-color);
+	font-size: var(--font-huge);
 	cursor: pointer;
+	transition: visibility var(--fade-delay), opacity var(--fade-delay);
 }
 #helpbutton::after {
 	content: "+";

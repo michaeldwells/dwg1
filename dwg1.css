@@ -87,6 +87,9 @@ body.accessible {
 		width: 24em;
 		margin: 4em 0;
 	}
+	.middle {
+		margin-top: calc(1em + env(safe-area-inset-top));
+	}
 	.rightside {
 		margin-top: var(--margin-small);
 	}
@@ -131,7 +134,8 @@ body {
 	z-index: 2;
 	top: env(safe-area-inset-top);
 	left: env(safe-area-inset-right);
-	margin: 1rem;
+	width: 1.8em;
+	padding: 1rem 0 1rem 2rem;
 	color: var(--ac-color);
 	font-size: var(--font-huge);
 	cursor: pointer;
@@ -169,7 +173,7 @@ div.leftside:hover {
 	border-collapse: collapse;
 }
 .leftside table tr td {
-	border: dashed 0.02em var(--ac-color);
+	border: dashed var(--line-thin) var(--ac-color);
 }
 .leftside table tr td:nth-child(2) { border-left: 0; }
 .leftside table tr:first-child td { border-top: 0; }

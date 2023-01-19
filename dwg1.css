@@ -31,6 +31,7 @@
 	--margin-big: calc(var(--basis) / 10);
 	--fade-delay: 0.8s;
 	--fade-delay-start: 0.4s;
+	touch-action: none;
 }
 * {
 	box-sizing: border-box;
@@ -38,7 +39,9 @@
 html {
 	height: 100%;
 }
-
+body.accessible {
+	touch-action: auto;
+}
 
 @media (min-aspect-ratio: 8/4) {
 	html {
@@ -80,7 +83,7 @@ html {
 	body div.leftside {
 		font-size: calc(var(--font-small) * 1.5);
 		width: 24em;
-		margin: 6em 0;
+		margin: 4em 0;
 	}
 	.rightside {
 		margin-top: var(--margin-small);

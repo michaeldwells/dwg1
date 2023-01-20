@@ -211,7 +211,7 @@ class Answers {
 		this.score = s.map((x,i)=>this.roundScore(x,i)).reduce((a,v)=>a+v,0);
 		$.id("score").innerHTML = this.score.toString();
 		$.id("score").classList.toggle("hide", this.score < 1);
-		$.id("subtotal").innerHTML = s.slice(1).map((x,i)=>this.roundScore(x,i)).reduce((a,v)=>a+v,0).toString();
+		$.id("subtotal").innerHTML = s.slice(1).map((x,i)=>this.roundScore(x,i+1)).reduce((a,v)=>a+v,0).toString();
 		$.id("subtotalline").classList.toggle("hide", (this.rounds.length < 2) || (this.rounds[0].length == 0));
 	}
 	add(word) {

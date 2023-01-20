@@ -27,13 +27,15 @@
 	--font-huge: calc(var(--basis-skewed) / 15);
 	--font-big: calc(var(--basis-skewed) / 20);
 	--font-small: calc(var(--basis-skewed) / 40);
-	--line-thin: calc(var(--basis) / 1000);
-	--line-med: calc(var(--basis) / 500);
+	--line-thin: min(calc(var(--basis) / 800), 1px);
+	--line-med: min(calc(var(--basis) / 500), 1px);
+	--line-thick: min(calc(var(--basis) / 200), 1px);
 	--margin-small: calc(var(--basis) / 20);
 	--margin-big: calc(var(--basis) / 10);
 	--fade-delay: 0.8s;
 	--fade-delay-start: 0.4s;
 	touch-action: none;
+	-webkit-tap-highlight-color: transparent;
 }
 * {
 	box-sizing: border-box;
@@ -45,7 +47,7 @@ body.accessible {
 	touch-action: auto;
 }
 
-@media (min-aspect-ratio: 8/4) {
+@media (min-aspect-ratio: 9/5) {
 	html {
 		overflow: visible hidden;
 	}
@@ -61,7 +63,7 @@ body.accessible {
 		margin-top: var(--margin-big);
 	}
 }
-@media (max-aspect-ratio: 8/4) and (min-aspect-ratio: 4/3) {
+@media (max-aspect-ratio: 9/5) and (min-aspect-ratio: 4/3) {
 	html {
 		overflow: visible hidden;
 	}
@@ -97,7 +99,7 @@ body.accessible {
 		margin: 0;
 	}
 }
-@media (max-aspect-ratio: 8/4) {
+@media (max-aspect-ratio: 9/5) {
 	div.leftside {
 		display: flex;
 		position: absolute;
@@ -109,6 +111,10 @@ body.accessible {
 		margin: 2em 0;
 		background: var(--pop-bg-color);
 		color: var(--pop-ac-color);
+		-webkit-tap-highlight-color: transparent;
+	}
+	div.leftside table tr td {
+		border-color: var(--pop-ac-color);
 	}
 }
 
@@ -167,6 +173,16 @@ div.leftside:hover {
 .leftside h1 {
 	font-size: 150%;
 	font-weight: normal;
+}
+.leftside p {
+	margin: 0.8em 0;
+	text-align: justify;
+	word-spacing: 0.12em;
+}
+.leftside hr {
+	height: var(--line-med);
+	width: 5%;
+	border-style: dashed;
 }
 .leftside table{
 	font-size: inherit;
@@ -293,14 +309,14 @@ button.used {
 	border-bottom: 0 solid var(--bg-color);
 }
 #wordlist.sum tbody tr:first-child {
-	border-bottom: 0.05rem solid var(--ac-color);
+	border-bottom: var(--line-thin) solid var(--ac-color);
 }
 #wordlist tbody tr:last-child {
 	border-bottom: 0 solid var(--bg-color);
 }
-#wordlist.sum tbody tr:last-child {
+/*#wordlist.sum tbody tr:last-child {
 	border-bottom: 0.05rem solid var(--ac-color);
-}
+}*/
 #wordlist tr td:last-child {
 	text-align: right;
 }
@@ -324,8 +340,31 @@ button.used {
 .bonusline td:first-child {
 	color: var(--ac-color);
 }
+#subtotalline.hide {
+	display: none;
+}
+#subtotal {
+	border-top: var(--line-thin) solid var(--ac-color);
+}
+#subtotal::before {
+	content: "subtotal ";
+	color: var(--ac-color);
+}
+#subtotal::after {
+	content: " +";
+	color: var(--ac-color);
+}
 #totalline {
 	text-align: right;
+}
+#score {
+	cursor: pointer;
+	padding-right: 0.81em;
+	border-block: var(--line-thin) solid var(--ac-color);
+}
+#score::before {
+	content: "score ";
+	color: var(--ac-color);
 }
 #shortwords {
 	display: inline-block;
@@ -346,21 +385,6 @@ button.used {
 	margin-right: 1em;
 	float: left;
 }
-#subtotal {
-	padding-right: 0.81em;
-}
-#subtotal::before {
-	content: "subtotal ";
-	color: var(--ac-color);
-}
-#score {
-	cursor: pointer;
-	padding-right: 0.81em;
-}
-#score::before {
-	content: "score ";
-	color: var(--ac-color);
-}
 
 .popuplayer {
 	display: flex;
@@ -371,6 +395,7 @@ button.used {
 	width: 100%;
 	height: 95%;
 	transition: visibility 1s, opacity 1s;
+	-webkit-tap-highlight-color: transparent;
 }
 #scorelayer {
 	cursor: pointer;

@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Disappointing Word Game Number One</title>
-<link rel="stylesheet" type="text/css" href="dwg1.css" />
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+	<title>Disappointing Word Game Number One</title>
+	<link rel="icon" type="image/png" href="favicon.png">
+	<link rel="stylesheet" type="text/css" href="dwg1.css" />
 </head>
+
 <body>
 <div id="helpbutton" class="hidelayer"></div>
 <div class="leftside hidelayer">
 <h1>+ How to Play +</h1>
 
-<p>Use letters from the grid to form words. 
-Each letter can only be used once, except for the 
-center square which will be available for every 
-word.</p>
+<p>Use letters from the grid to form words of at 
+least two letters. Each letter can only be used 
+once, except for the center square which will be 
+available for every word.</p>
+
+<hr/>
 
 <p>Words score points based on their lengths.</p>
 
@@ -33,11 +40,13 @@ word.</p>
 
 <p>The score for each round will be your longest 
 word multiplied by your other words added 
-together.</p>
+together, with a bonus for the minimum word length.</p>
+
+<hr/>
 
 <p>If you clear the board (not including the 
-center square) it will reset, and the minimum word 
-length (indicated by undescores) will go up by one. 
+center square) it will reset and the minimum word 
+length (indicated by undescores) will increase. 
 Scores from each round will be added together.</p>
 
 <p>You can view your score summary any time by 
@@ -87,9 +96,10 @@ Good luck!</p>
 <script src="tris.js"></script>
 <script src="uniques.ingless.js"></script>
 <script src="zxqj.lengths.js"></script>
+<script>var dictionaryEpic;</script>
 
 <script src="dwg1.js"></script>
 
-<!--<script src="epic.js"></script>
-<script>const dictionaryEpic=new Set(epic);</script>-->
+<script src="epic.js"></script>
+<script>dictionaryEpic = new Set(epic);</script>
 </body>

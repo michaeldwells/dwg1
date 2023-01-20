@@ -104,21 +104,12 @@ class Grid {
 	}
 	isDone() {
 		let tiles = this.grid.filter(x => !x.used).map(x => x.letter);
-		if (tiles.reduce((a,v) => a+v, "").length < minAnswer) {
-//			LOG("---NOT ENOUGH LETTERS---");
-//			LOGS(letterCountAll);
-//			LOGS(minAnswer);
-			return true;
-		}
+		if (tiles.reduce((a,v) => a+v, "").length < minAnswer) return true;
 		
-		/* EPIC DICTIONARY REMOVED *****************************
 		if (typeof dictionaryEpic === "undefined") return false;
-		*******************************************************/
 		
 		if (tiles.length < 8) {
 			let used = answers.rounds.flat();
-//			LOG("------");
-//			LOGS(used);
 			tiles.sort((a,b) => {
 				if (a === b) return 0;
 				if (a.length < b.length) return -1;
@@ -130,21 +121,16 @@ class Grid {
 			let tsets = subsets(tiles);
 			tsets.sort((a,b) => a.length - b.length);
 			for (let tset of tsets) {
-//				LOGS(tset);
 				if (tset.reduce((a,v) => a+v, "").length >= minAnswer) {
 					for (let w of permutations(tset)) {
 						let word = w.reduce((a,v) => a+v, "");
-//						LOG(" - "+word);
 						if (!used.includes(word)) {
 							if (dictionary.has(word)) return false;
-							//if (word.length > 4 && dictionaryEpic.has(word)) return false;
+							if (dictionaryEpic?.has(word)) return false;
 						}
 					}
 				}
 			}
-			
-//			LOG("---NO WORDS FOUND---");
-//			LOGS(tiles);
 			return true;
 		}
 		return false;
@@ -174,7 +160,7 @@ class Guess {
 	updateDisplay() {
 		this.word = this.parts.reduce((t,x) => {return t+x}, "").toUpperCase();
 		this.element.value = this.word;
-		$.q(".footer")[0].classList.toggle("ready", this.lookup());
+		$.q(".footer")[0].classList.toggle("ready", !answers.words.has(this.word) && this.lookup());
 		let g = $.id("guess").value;
 		$.id("guess").value = $.id("guess").value.padEnd(minAnswer, "_");
 		$.id("guess").classList.toggle("short", g.length < minAnswer);
@@ -186,6 +172,7 @@ class Guess {
 		if ((this.word.length > 4) && (typeof dictionaryEpic !== "undefined"))
 			found ||= dictionaryEpic.has(this.word);
 		*/
+		found ||= Boolean(dictionaryEpic?.has(this.word));
 		return found;
 	}
 	submit(answers) {
@@ -197,11 +184,6 @@ class Guess {
 			}
 		}
 	}
-	/*
-	score() {
-		return range(M.floor(this.word.length / SCORE_CUT)).map((x)=>this.word.length - SCORE_CUT * (x+1)).reduce((a,v)=>a+v);
-	}
-	*/
 }
 
 function score(w) {
@@ -220,13 +202,16 @@ class Answers {
 		this.score = 0;
 	}
 	scoring(r=0) {return this.rounds[r].map(score).filter((x)=>x>0).sort((a,b)=>b-a);}
-	roundScore(r) {return (r[0] || 0)*r.slice(1).reduce((x,y) => x+y, 1);}
+	roundScore(r,i) {
+		let bonus = this.rounds.length - i + 1;
+		return (r[0] || 0)*r.slice(1).reduce((x,y) => x+y, bonus);
+	}
 	updateScore() {
 		let s = this.rounds.map((x,i)=>this.scoring(i));
-		this.score = s.map(x=>this.roundScore(x)).reduce((a,v)=>a+v,0);
+		this.score = s.map((x,i)=>this.roundScore(x,i)).reduce((a,v)=>a+v,0);
 		$.id("score").innerHTML = this.score.toString();
 		$.id("score").classList.toggle("hide", this.score < 1);
-		$.id("subtotal").innerHTML = s.slice(1).map(x=>this.roundScore(x)).reduce((a,v)=>a+v,0).toString();
+		$.id("subtotal").innerHTML = s.slice(1).map((x,i)=>this.roundScore(x,i)).reduce((a,v)=>a+v,0).toString();
 		$.id("subtotalline").classList.toggle("hide", (this.rounds.length < 2) || (this.rounds[0].length == 0));
 	}
 	add(word) {
@@ -237,16 +222,17 @@ class Answers {
 		this.updateScore();
 		let s = score(word);
 		if (s > 0) {
-			$.new(["tr",{"class":"answerline"},
-					   ["td",{"class":"word"},word],
-					   ["td",{"class":"score"},s.toString()]
-				  ], "#wordlist > tbody");
 			if (this.scoring().length == 1) {
-				$.new(["tr",{"class":"answerline bonusline"},
-						   ["td",{"class":"word"},"("+word.toLowerCase()+")"],
-						   ["td",{"class":"score"},"1"]
+				$.new(["tr",{"class":"answerline bonusline", "id":"bonusline"},
+						   ["td",{"class":"word"},"(bonus)"],
+						   ["td",{"class":"score"},(this.rounds.length + 1).toString()]
 					  ], "#wordlist > tbody");
 			}
+			let a = $.new(["tr",{"class":"answerline"},
+					   ["td",{"class":"word"},word],
+					   ["td",{"class":"score"},s.toString()]
+				  ]);
+			$.id("bonusline").before(a);
 		}
 		if (grid.isClear()) {
 			this.usedWords = this.rounds.flat();
@@ -263,18 +249,14 @@ class Answers {
 		let words = Array.from(this.rounds[0]);
 		words.sort((a,b) => b.length - a.length);
 		$.id("shortwords").innerHTML = "";
-		let n = 1;
 		for (let i of words.keys()) {
 			let s = score(words[i]);
 			if (s > 0) {
-				let e = $.q("#wordlist tbody tr:nth-child("+(i+n).toString()+")")[0];
+				let e = $.q("#wordlist tbody tr:nth-child("+(i+1).toString()+")")[0];
 				e.querySelector("td:first-child").innerHTML = words[i];
 				e.querySelector("td:last-child").innerHTML = s.toString();
-				if (n == 1) {
-					n = 2;
-					e = $.q("#wordlist tbody tr:nth-child("+(i+n).toString()+")")[0];
-					e.querySelector("td:first-child").innerHTML = "("+words[i].toLowerCase()+")";
-					e.querySelector("td:last-child").innerHTML = "1";
+				if (i == 0) {
+					$.q("#bonusline td:last-child").innerHTML = (this.rounds.length + 1).toString();
 				}
 			} else {
 				$.new(["div", words[i]], "#shortwords");
@@ -300,13 +282,13 @@ class Answers {
 			let e2;
 			for (let i1 of r.keys()) {
 				if (i1 == 0) {
-					e2 = $.new(["td",r[i1].toString() + " x ( 1"], e1);
+					e2 = $.new(["td",r[i1].toString() + " x ( "], e1);
 				} else {
-					e2.innerHTML +=  " + " + r[i1].toString();
+					e2.innerHTML += r[i1].toString() + " + ";
 				}
 			}
 			if (typeof(e2) !== "undefined")
-				e2.innerHTML +=  " ) = " + this.roundScore(r).toString();
+				e2.innerHTML += (this.rounds.length-i0+1).toString() + " ) = " + this.roundScore(r,i0).toString();
 		}
 		$.id("finalscore").innerHTML = "Score: "+this.score.toString();
 		this.rounds.flat().forEach(x => $.new(["span",x], "#finalwords"));

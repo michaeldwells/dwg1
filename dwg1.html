@@ -11,7 +11,9 @@
 
 <body>
 <div id="helpbutton" class="hidelayer"></div>
-<div class="leftside hidelayer">
+<div id="leftside" class="hidelayer">
+<div id="leftclosebutton" class="closebutton"></div>
+<div id="leftpage1" class="leftpage showpage1">
 <h1>+ How to Play +</h1>
 
 <p>Use letters from the grid to form words of at 
@@ -25,16 +27,22 @@ available for every word.</p>
 
 <table>
 <tr>
-<th>Word Length</th>
+<th><span class="hideonsmall">Word </span>Length</th>
 <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
 <td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
-<td>11</td><td>12</td><td>13</td><td>14</td><td>15</td>
+<td>11</td><td>12</td>
+<td class="hideonsmall">13</td>
+<td class="hideonsmall">14</td>
+<td class="hideonsmall">15</td>
 </tr>
 <tr>
 <th>Score</th>
 <td>0</td><td>0</td><td>0</td><td>1</td><td>2</td>
 <td>3</td><td>5</td><td>7</td><td>9</td><td>12</td>
-<td>15</td><td>18</td><td>22</td><td>26</td><td>30</td>
+<td>15</td><td>18</td>
+<td class="hideonsmall">22</td>
+<td class="hideonsmall">26</td>
+<td class="hideonsmall">30</td>
 </tr>
 </table>
 
@@ -53,6 +61,47 @@ Scores from each round will be added together.</p>
 clicking on your score. This screen will appear 
 automatically if the game thinks you're stuck. 
 Good luck!</p>
+</div>
+
+<div id="leftpage2" class="leftpage showpage1">
+<h1>+ TIPS +</h1>
+
+<p>
+The best way to learn the game is to play, but if you're
+keen to maximize your score, here are some things to
+consider.
+</p>
+<p>
+Firstly, you want to keep going as long as possible. 
+Keep an eye on the minimum word length, and plan ahead. 
+Try to use up the difficult letters early on in each 
+round so that you'll have an easier time clearing the 
+grid.
+</p>
+<p>
+Secondly, long words are cruicial to a good score. A 
+twelve letter word scores twice as much as a nine letter 
+word, for example. Every round needs a good scoring word, 
+so have a few in mind.
+</p>
+<p>
+Thirdly, use the center tile as much as possible. It adds 
+three free letters to every word, and can make a huge 
+difference to your score.
+</p>
+<hr/>
+<p>
+There is no randomness or hidden information in this game, 
+so you could plan your whole run before you start. I 
+strongly recommend you don't. The number of possibilities in 
+each game is so large that you could waste hours searching 
+for the perfect solution. The fun of the game is in the 
+strange and surprising words you're able to conjour up when 
+pushed.
+</p>
+</div>
+<div id="sidemaskl" class="sidemaskl"><p>‹</p></div>
+<div id="sidemaskr" class="sidemaskr active"><p>›</p></div>
 </div>
 <div class="middle hidelayer">
 	<div class="gamegrid" id="grid"></div>

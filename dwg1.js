@@ -166,14 +166,14 @@ class Guess {
 		$.id("guess").classList.toggle("short", g.length < minAnswer);
 	}
 	lookup() {
-		let found = this.word.length >= minAnswer;
-		found &&= dictionary.has(this.word);
+		if (this.word.length < minAnswer) return false;
+		if (dictionary.has(this.word)) return true;
 		/*
 		if ((this.word.length > 4) && (typeof dictionaryEpic !== "undefined"))
 			found ||= dictionaryEpic.has(this.word);
 		*/
-		found ||= Boolean(dictionaryEpic?.has(this.word));
-		return found;
+		if (Boolean(dictionaryEpic?.has(this.word))) return true;
+		return false;
 	}
 	submit(answers) {
 		if (this.lookup()) {
@@ -299,9 +299,32 @@ class Answers {
 	}
 }
 
-function toggleHelpLayer() {
-	$.class('leftside')[0].classList.toggle('hidelayer');
+
+function toggleHelpLayer(e) {
+	if (typeof e !== "undefined") e?.stopPropagation();
+	$.id('leftside').classList.toggle('hidelayer');
 	$.id('helpbutton').classList.toggle('hidelayer');
+}
+
+function toggleHelpPageLeft() {
+	if ($.id('leftpage1').classList.contains('showpage2')) {
+		for (e of $.class("leftpage")) {
+			e.classList.add('showpage1');
+			e.classList.remove('showpage2');
+		}
+		$.id('sidemaskl').classList.remove('active');
+		$.id('sidemaskr').classList.add('active');
+	}
+}
+function toggleHelpPageRight() {
+	if ($.id('leftpage1').classList.contains('showpage1')) {
+		for (e of $.class("leftpage")) {
+			e.classList.add('showpage2');
+			e.classList.remove('showpage1');
+		}
+		$.id('sidemaskr').classList.remove('active');
+		$.id('sidemaskl').classList.add('active');
+	}
 }
 
 const grid = new Grid();
@@ -311,7 +334,11 @@ $.id("delete").setAttribute("onClick", "guess.remove()");
 $.id("enter").setAttribute("onClick", "guess.submit(answers)");
 $.id("score").setAttribute("onClick", "answers.showScore()");
 $.id("scorelayer").setAttribute("onClick", "answers.hideScore()");
-$.class("leftside")[0].setAttribute("onClick", "toggleHelpLayer();");
+/*$.id("leftside").setAttribute("onClick", "toggleHelpPage();");*/
 $.id("helpbutton").setAttribute("onClick", "toggleHelpLayer();");
+/*$.id("leftclosebutton").setAttribute("onClick", "toggleHelpLayer();");*/
+$.id("leftclosebutton").addEventListener("click", toggleHelpLayer);
+$.id("sidemaskl").addEventListener("click", toggleHelpPageLeft);
+$.id("sidemaskr").addEventListener("click", toggleHelpPageRight);
 $.class("middle")[0].classList.remove("hidelayer");
-setTimeout(()=>$.class("leftside")[0].classList.remove("hidelayer"), 200);
+setTimeout(()=>$.id("leftside").classList.remove("hidelayer"), 200);

@@ -52,20 +52,16 @@
 	--pop-bg-clear: #2210;
 	--pop-ac-color: #fe8;
 	--basis-skewed: min(80vh, 100vw);
-	--font-small: max(8pt, calc(var(--basis-skewed) / 36));
+	--font-small: max(8pt, calc(var(--basis-skewed) / 24));
+	--font-med: calc(var(--font-small) * 1.33);
+	--font-big: calc(var(--font-small) * 1.5);
 	--font-huge: calc(var(--font-small) * 2.67);
-	--font-big: calc(var(--font-small) * 2);
 	--line-thin: max(0.125vmin, 1px);
 	--line-med: max(0.2vmin, 2px);
 	--line-thick: max(0.5vmin, 3px);
-	--margin-small: calc(var(--font-small) * 1.8);
+	--margin-small: calc(var(--font-small) * 2);
 	--margin-big: calc(var(--font-small) * 4);
-	--grid-cell-width: min(3.5em, min(20vw, 15vh));
-	--side-width: max(13rem, 26em);
-	--side-width-popup: 36em;
-	--side-width-small: min(24em, 95%);
-	--side-inner: var(--side-width);
-	
+	--side-width: min(95%, 36rem);
 	--fade-delay: 0.8s;
 	--fade-delay-start: 0.4s;
 	-webkit-tap-highlight-color: transparent;
@@ -82,6 +78,27 @@ body.accessible {
 	touch-action: auto;
 }
 
+@media (max-aspect-ratio: 1/1) {
+	div.middle {
+		grid-template-rows: 4em 1fr max-content;
+	}
+}
+@media (max-width: 400px) {
+	div.middle {
+		grid-template-rows: 3em 1fr max-content;
+	}
+	div.middle #tiles {
+		font-size: var(--font-big);
+	}
+	div#enter {
+		font-size: var(--font-huge);
+		left: calc(100% - 1.8em);
+	}
+	div#helpbutton {
+		padding: 1rem 0 1rem 1rem;
+	}
+}
+/*
 @media (max-width: 400px) {
 	body div#help-layer {
 		top: 0;
@@ -115,7 +132,7 @@ body.accessible {
 	body #leftpage3.showpage2 {translate: 100%;  opacity: 0%}
 	body #leftpage3.showpage3 {translate: 0em;   opacity: 100%}
 }
-
+*/
 html body *.hide {
 	visibility: hidden;
 	opacity: 0;
@@ -179,13 +196,12 @@ div#help-layer:hover {
 .closebutton {
 	top: 0;
 	position: fixed;
-	padding: 0 1rem 1rem 1rem;
-	/*margin-left: 1rem;*/
+	padding: 0.5em 1em 1em 1em;
 	transition: opacity 0.6s;
 	z-index: 5;
 	cursor: pointer;
 }
-@supports selector(:hover) {
+@media (hover: hover) {
 	.closebutton {
 		opacity: 0%;
 	}
@@ -217,7 +233,6 @@ div#help-layer:hover .closebutton {
 #leftpage3.showpage2 {translate: 26em;  opacity: 0%}
 #leftpage3.showpage3 {translate: 0em;   opacity: 100%}
 #leftpage1, #leftpage2, #leftpage3 {
-	width: var(--side-inner);
 	padding-inline: var(--margin-small);
 	transition: translate 1s, opacity 1s;
 }
@@ -241,13 +256,16 @@ div#help-layer:hover .closebutton {
 	font-size: var(--font-huge);
 	transition: opacity 1s;
 }
-@supports selector(:hover) {
+@media (hover: hover) {
 	#help-layer .sidemaskl p,
 	#help-layer .sidemaskr p {
 		opacity: 0%;
 	}
 }
-
+#help-layer .sidemaskl:not(.active) p,
+#help-layer .sidemaskr:not(.active) p {
+	opacity: 0%;
+}
 #help-layer:hover .sidemaskl.active p,
 #help-layer:hover .sidemaskr.active p {
 	opacity: 100%;
@@ -281,13 +299,14 @@ div#help-layer:hover .closebutton {
 
 .middle {
 	display: grid;
-	width: min(28em,90%);
+	width: min(28em,95%);
 	height: 100%;
 	/*flex-direction: column;*/
 	grid-template-rows: 6em 1fr max-content;
 	align-items: center;
 	justify-items: center;
 	transition: visibility var(--fade-delay-start), opacity var(--fade-delay-start);
+	font-size: var(--font-med);
 }
 #tiles {
 	width: min(24em, 100%);
@@ -336,6 +355,7 @@ div.tile ::selection {
 	/*height: 100%;*/
 	/*background: var(--bg-color);*/
 	width: min(20em, 80%);
+	height: 2em;
 }
 #working-answer {
 	display: flex;
@@ -346,6 +366,7 @@ div.tile ::selection {
 	height: var(--font-huge);
 	border-bottom: var(--line-thin) solid var(--fg-color);
 	/*background: var(--bg-color);*/
+	align-items: end;
 }
 .guess-tile {
 	float: left;
@@ -376,6 +397,11 @@ div.tile ::selection {
 }
 #enter::before {
 	content: "›››";
+}
+@media (pointer: coarse) {
+	#enter {
+		font-size: var(--font-huge);
+	}
 }
 #wrong-answers {
 	/*margin-top: 4em;*/
@@ -420,7 +446,7 @@ div.tile ::selection {
 	padding: var(--font-small);
 	border: var(--line-thick) double var(--pop-ac-color);
 	color: var(--pop-ac-color);
-	background: var(--pop-bg-color);
+	background: var(--pop-bg-solid);
 	font-family: Bodoni Moda, serif;
 	font-size: var(--font-small);
 }
@@ -430,7 +456,7 @@ div.tile ::selection {
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	padding: var(--margin-small);
+	padding: var(--font-med);
 	border-image: radial-gradient(ellipse 71% 71% at center, var(--pop-bg-color) 80%, var(--pop-ac-color) 97%) 2% / var(--line-thin);
 	text-align: center;
 }
@@ -441,13 +467,15 @@ div.tile ::selection {
 	color: var(--fg-color);
 	font-size: max(8pt, min(calc(100vw * 0.075), calc(var(--font-big) * 2)));
 }
-#share {
-	margin-right: 2em;
+#links {
+	display: flex;
+	width: 100%;
+	justify-content: space-around;
 }
-#retry {
-	margin-left: 2em;
+#links > * {
+	padding-inline: 1em;
 }
-#retry a, #share a {
+#links a {
 	color: inherit;
 	text-decoration: inherit;
 }

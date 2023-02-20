@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+	<title>Disappointing Word Game Number Two</title>
+	<link rel="icon" type="image/png" href="dwg2.png">
+	<link rel="stylesheet" type="text/css" href="dwg2.css" />
+</head>
+
+<body>
+<div id="helpbutton" class="hidelayer"></div>
+<div id="help-layer" class="hidelayer">
+	<div id="leftclosebutton" class="closebutton"></div>
+	<div id="leftpage1" class="leftpage showpage1">
+		<h1>+ How to Play +</h1>
+		<p>Combine the blocks to find the longest possible word.</p> <p>You may 
+		guess as often as you like.</p> <p>If part of your guess is in the solution, 
+		those blocks will be combined.</p>
+	</div>
+
+	<div id="leftpage2" class="leftpage showpage1">
+		<h1>+ Notes +</h1>
+		<p>Sometimes it seems too easy. Often I find it nearly impossible.</p>
+		<p>I'm considering a light scoring mechanism whereby you're punished 
+		for guesses that aren't in the dictionary, and possibly a limit to the 
+		number of guesses allowed.</p>
+	</div>
+	<div id="sidemaskl" class="sidemaskl"><p>‹</p></div>
+	<div id="sidemaskr" class="sidemaskr active"><p>›</p></div>
+</div>
+<div class="middle hidelayer">
+	<div id="answer-panel">
+		<div id="working-answer"></div>
+		<div id="enter" onClick="submitGuess();"></div>
+	</div>
+	<div id="wrong-answers"></div>
+	<div id="tiles"></div>
+</div>
+<div id="scorelayer" class="popuplayer hide">
+	<div id="results-outer">
+		<div id="results-inner">
+			<p>Well done, you found the longest word.</p>
+			<p id="finalword"></p>
+			<p><span id="share">Share this puzzle</span>
+			<span id="retry"><a href="dwg2.html">Try another puzzle</a></span></p>
+			<!--<p id="finalscore">Score: 0</p>-->
+		</div>
+	</div>
+</div>
+
+<script src="dollar.js"></script>
+
+<!--<script src="splits.js"></script>-->
+<script src="wordgamedata.js"></script>
+<script src="dwg2.js"></script>
+</body>

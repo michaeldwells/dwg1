@@ -451,6 +451,14 @@ function clickTile(i) {
 	updateTiles(tiles);
 }
 
+function stopProp(e) {
+	if (typeof e !== "undefined") e?.stopPropagation();
+}
+function hideHelpLayer(e) {
+	if (typeof e !== "undefined") e?.stopPropagation();
+	$.id('help-layer').classList.add('hidelayer');
+	$.id('helpbutton').classList.remove('hidelayer');
+}
 function toggleHelpLayer(e) {
 	if (typeof e !== "undefined") e?.stopPropagation();
 	$.id('help-layer').classList.toggle('hidelayer');
@@ -495,7 +503,11 @@ function toggleHelpPageRight() {
 }
 
 //$.id("scorelayer").setAttribute("onClick", "answers.hideScore()");
-$.id("helpbutton").setAttribute("onClick", "toggleHelpLayer();");
+$.q("body")[0].addEventListener("click", hideHelpLayer);
+//$.id("helpbutton").setAttribute("onClick", "toggleHelpLayer();");
+$.id("helpbutton").addEventListener("click", toggleHelpLayer);
+$.id("help-layer").addEventListener("click", stopProp);
+$.id("leftclosebutton").addEventListener("click", toggleHelpLayer);
 $.id("leftclosebutton").addEventListener("click", toggleHelpLayer);
 $.id("sidemaskl").addEventListener("click", toggleHelpPageLeft);
 $.id("sidemaskr").addEventListener("click", toggleHelpPageRight);

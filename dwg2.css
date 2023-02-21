@@ -24,10 +24,7 @@
         A backdrop-filter other than none (e.g. backdrop-filter: blur(10px);)
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Federo&family=Forum&family=Urbanist:wght@100&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&family=Cinzel&display=swap');
 
-/*
 @font-face {
   font-family: "Urbanist";
   src: url("Urbanist-VariableFont_wght.ttf");
@@ -40,7 +37,18 @@
   font-family: "Federo";
   src: url("Federo-Regular.ttf");
 }
-*/
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("BodoniModa-VariableFont_opsz,wght.ttf");
+}
+@font-face {
+  font-family: "Cinzel";
+  src: url("Cinzel-VariableFont_wght.ttf");
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Federo&family=Forum&family=Urbanist:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&family=Cinzel&display=swap');
+
 
 :root {
 	--bg-color: #222;
@@ -81,6 +89,12 @@ body.accessible {
 @media (max-aspect-ratio: 1/1) {
 	div.middle {
 		grid-template-rows: 4em 1fr max-content;
+	}
+}
+@media (max-aspect-ratio: 1/2) {
+	div.middle {
+		height: 95%;
+		margin-top: 1em;
 	}
 }
 @media (max-width: 400px) {
@@ -449,6 +463,7 @@ div.tile ::selection {
 	background: var(--pop-bg-solid);
 	font-family: Bodoni Moda, serif;
 	font-size: var(--font-small);
+	max-width: 95%;
 }
 #results-inner {
 	display: flex;
@@ -476,6 +491,6 @@ div.tile ::selection {
 	padding-inline: 1em;
 }
 #links a {
-	color: inherit;
-	text-decoration: inherit;
+	color: var(--pop-ac-color);
+	text-decoration: none;
 }

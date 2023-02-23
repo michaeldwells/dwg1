@@ -91,10 +91,11 @@ body.accessible {
 		grid-template-rows: 4em 1fr max-content;
 	}
 }
-@media (max-aspect-ratio: 1/2) {
+@media (max-aspect-ratio: 2/3) {
 	div.middle {
-		height: 95%;
-		margin-top: 1em;
+		height: 85%;
+		margin-top: 2em;
+		grid-template-rows: 6em 1fr max-content;
 	}
 }
 @media (max-width: 400px) {

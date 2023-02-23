@@ -207,7 +207,7 @@ LOGS(word.reduce(sum));
 var guess = [];
 const guesses = [];
 var score = 0;
-var tiles = pad_out_blocks(word, 21).map(x=>[x]);
+var tiles = pad_out_blocks(word, 20).map(x=>[x]);
 tiles.sort().sort((x,y)=>x[0].length-y[0].length);
 tiles = [...tiles.filter((x,i)=>i%2==0), ...tiles.filter((x,i)=>i%2==1).reverse()];
 
@@ -242,6 +242,11 @@ function most_common_split(splits, count=1, sample_count=4) {
 	return rarities.sort().map(x=>x[1]).slice(0,count);
 }
 
+/*
+Given a list of blocks, and an answer word that can be ignored, this function 
+returns a pair consisting of a random longest word, and the list of blocks 
+that form that word.
+*/
 function longest_word_from_these_blocks(blocks, answer_word) {
 	let k = Array.from(blocks.keys());
 	let words = k.filter(x=>word_trie.exists(blocks[x])).map(x=>[x]);
@@ -269,7 +274,9 @@ function pad_out_blocks(answer_split, total_block_count) {
 	
 	let doubles = range_selection[answer_split.length-1].map(i=>answer_split[i]+answer_split[i+1]);
 	let	min_double = M.min(...doubles.map(x=>x.length));
-
+	
+	// This lot compiles a list of splits of words for each adjacent pair of 
+	// blocks in the answer. Any blocks already in the answer are filtered out.
 	let good_friends = {};
 	range_selection[answer_split.length-1].forEach(i=>good_friends[i]=[]); // {i:[] for i in [1..answer_split.length-1]}
 	for (const w of short_words) {
@@ -278,35 +285,55 @@ function pad_out_blocks(answer_split, total_block_count) {
 			let d_i = 0;
 			while ((d_i < doubles.length) && (w.slice(i,i+doubles[d_i].length) != doubles[d_i])) d_i += 1;
 			if (d_i < doubles.length) {
-				let s = get_splits_of_word(w);
+				let s = get_splits_of_word(w).filter(x=>x.length < 5);
 				shuffle(s);
 				let j = 0;
 				while ((j < s.length) && (s[j].filter(x=>answer_set.has(x)).length < 2)) j += 1;
-				if (j < s.length) good_friends[d_i].push(s[j]);
+				if (j < s.length) {
+					let sj = s[j].filter(x=>answer_split[d_i]!=x && answer_split[d_i+1]!=x);
+					if (sj.every(x=>!answer_splits_set.has(x)))
+						good_friends[d_i].push(sj);
+				}
 			}
 		}
 	}
 	
-	LOG(good_friends);
 	Object.keys(good_friends).forEach(i=>shuffle(good_friends[i]));
 	while (result_blocks.size < total_block_count && Object.values(good_friends).flat().length > 0) {
+		let padding_words = [];
+		
 		for (n of Object.keys(good_friends)) {
 			if (good_friends[n].length == 0) continue;
 			let next_word = good_friends[n].pop();
-			for (b of next_word) {
-				if (!result_blocks.has(b) && !answer_splits_set.has(b)) result_blocks.add(b);
-			}
+			padding_words.push(next_word);
 		}
 		
-		let longest_word = longest_word_from_these_blocks([...result_blocks], answer_word);
+		let longest_word = longest_word_from_these_blocks([...result_blocks, ...padding_words.flat()], answer_word);
 		while (longest_word[0].length >= answer_length) {
-			let problem_blocks = longest_word[1].filter(x=>!answer_split.includes(x));
-			result_blocks.delete(pick(problem_blocks));
-			longest_word = longest_word_from_these_blocks([...result_blocks], answer_word);
+			let problem_blocks = new Set( longest_word[1].filter(x=>!answer_split.includes(x)) );
+			padding_words = padding_words.filter(w=>w.every(x=>!problem_blocks.has(x)));
+			longest_word = longest_word_from_these_blocks([...result_blocks, ...padding_words.flat()], answer_word);
+		}
+		
+		if (result_blocks.size + padding_words.flat().length < total_block_count) {
+			padding_words.flat().forEach(x=>result_blocks.add(x));
+		} else {
+			shuffle(padding_words);
+			while (result_blocks.size + padding_words[0].length < total_block_count && padding_words.length > 0) {
+				let w = padding_words.shift();
+				w.forEach(x=>result_blocks.add(x));
+			}
+			padding_words = padding_words.flat();
+			shuffle(padding_words);
+			while (result_blocks.size < total_block_count && padding_words.length > 0) {
+				result_blocks.add(padding_words.pop());
+			}
 		}
 	}
 	
 	result_blocks = [...result_blocks];
+	
+	// This should be redundant but it costs nothing to keep it in.
 	if (result_blocks.length > total_block_count) {
 		optional_blocks = result_blocks.filter(x=>!answer_split.includes(x));
 		rarities = optional_blocks.sort((a,b)=>rarity(b) - rarity(a));

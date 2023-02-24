@@ -319,7 +319,7 @@ function pad_out_blocks(answer_split, total_block_count) {
 			padding_words.flat().forEach(x=>result_blocks.add(x));
 		} else {
 			shuffle(padding_words);
-			while (result_blocks.size + padding_words[0].length < total_block_count && padding_words.length > 0) {
+			while ((padding_words.length > 0) && ((result_blocks.size + padding_words[0].length) < total_block_count)) {
 				let w = padding_words.shift();
 				w.forEach(x=>result_blocks.add(x));
 			}

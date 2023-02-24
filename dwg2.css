@@ -93,11 +93,11 @@ body.accessible {
 }
 @media (max-aspect-ratio: 2/3) {
 	div.middle {
-		height: 85%;
-		margin-top: 2em;
-		grid-template-rows: 6em 1fr max-content;
+		height: 90vh;
+		margin-top: 5vh;
 	}
 }
+
 @media (max-width: 400px) {
 	div.middle {
 		grid-template-rows: 3em 1fr max-content;
@@ -473,7 +473,11 @@ div.tile ::selection {
 	width: 100%;
 	height: 100%;
 	padding: var(--font-med);
-	border-image: radial-gradient(ellipse 71% 71% at center, var(--pop-bg-color) 80%, var(--pop-ac-color) 97%) 2% / var(--line-thin);
+/*	border-image: radial-gradient(ellipse 71% 71% at center, var(--pop-bg-color) 80%, var(--pop-ac-color) 97%) 2% / var(--line-thin);*/
+	border: var(--line-thin) solid var(--pop-bg-clear);
+	border-image-source: radial-gradient(ellipse 71% 71% at center, var(--pop-bg-color) 80%, var(--pop-ac-color) 97%);
+	border-image-slice: 2%;
+	border-image-width: var(--line-thin);
 	text-align: center;
 }
 #finalword {

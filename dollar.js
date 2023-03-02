@@ -64,6 +64,156 @@ const range = (start, stop, step) =>
   Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
 */
 
+const sum = (a,b) => a+b;
+const len = (x) => x.length;
+
+function binarySearch(sortedArray, key) {
+    let start = 0;
+    let end = sortedArray.length - 1;
+
+    while (start <= end) {
+        let middle = Math.floor((start + end) / 2);
+
+        if (sortedArray[middle] === key) return middle;
+        if (sortedArray[middle] < key) {
+            start = middle + 1;
+        } else {
+            end = middle - 1;
+        }
+    }
+    return (-1)*end;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// TRIE Data Structure                                                       //
+///////////////////////////////////////////////////////////////////////////////
+class TrieNode {
+	constructor(key) {
+		this.key = key;
+		this.parent = null;
+		this.children = {};
+		this.end = false;
+	}
+  
+  getWord() {
+    let output = [];
+    let node = this;
+
+    while (node !== null) {
+      output.unshift(node.key);
+      node = node.parent;
+    }
+
+    return output.join('');
+  }
+}
+
+class Trie {
+	constructor() {
+		this.root = new TrieNode(null);
+	}
+  
+	insert(word) {
+		let node = this.root;
+		for(let i = 0; i < word.length; i++) {
+			if (!node.children[word[i]]) {
+				node.children[word[i]] = new TrieNode(word[i]);
+				node.children[word[i]].parent = node;
+			}
+
+			node = node.children[word[i]];
+
+			if (i == word.length-1) {
+				node.end = true;
+			}
+		}
+	}
+  
+  // check if it contains a whole word.
+  contains(word) {
+    let node = this.root;
+    for(let i = 0; i < word.length; i++) {
+      if (node.children[word[i]]) {
+        node = node.children[word[i]];
+      } else {
+        return false;
+      }
+    }
+
+    return node.end;
+  }
+  
+  // returns true if there is any word with the given prefix
+  exists(prefix) {
+    let node = this.root;
+    let output = [];
+    for(let i = 0; i < prefix.length; i++) {
+      if (node.children[prefix[i]]) {
+        node = node.children[prefix[i]];
+      } else {
+        return false;
+      }
+    }
+
+    return true;
+  }
+  
+  // returns every word with given prefix
+  find(prefix) {
+    let node = this.root;
+    let output = [];
+    for(let i = 0; i < prefix.length; i++) {
+      if (node.children[prefix[i]]) {
+        node = node.children[prefix[i]];
+      } else {
+        return output;
+      }
+    }
+
+    Trie.findAllWords(node, output);
+
+    return output;
+  }
+  
+  // recursive function to find all words in the given node.
+  static findAllWords(node, arr) {
+    if (node.end) {
+      arr.unshift(node.getWord());
+    }
+
+    for (let child in node.children) {
+      Trie.findAllWords(node.children[child], arr);
+    }
+  }
+
+  // removes a word from the trie.
+  remove(word) {
+      let root = this.root;
+
+      if(!word) return;
+
+      const removeWord = (node, word) => {
+          if (node.end && node.getWord() === word) {
+              let hasChildren = Object.keys(node.children).length > 0;
+              if (hasChildren) {
+                  node.end = false;
+              } else {
+                  node.parent.children = {};
+              }
+
+              return true;
+          }
+          for (let key in node.children) {
+              removeWord(node.children[key], word)
+          }
+
+          return false
+      };
+      removeWord(root, word);
+  }
+}
+
+
 const $ = document;
 
 Object.defineProperty($, 'width', { get: function() { return this.documentElement.clientWidth; } } );

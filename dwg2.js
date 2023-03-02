@@ -1,191 +1,3 @@
-function sum(a,b) {return a+b;}
-function binarySearch(sortedArray, key){
-    let start = 0;
-    let end = sortedArray.length - 1;
-
-    while (start <= end) {
-        let middle = Math.floor((start + end) / 2);
-
-        if (sortedArray[middle] === key) return middle;
-        if (sortedArray[middle] < key) {
-            start = middle + 1;
-        } else {
-            end = middle - 1;
-        }
-    }
-    return (-1)*end;
-}
-
-// we start with the TrieNode
-const TrieNode = function (key) {
-  // the "key" value will be the character in sequence
-  this.key = key;
-  
-  // we keep a reference to parent
-  this.parent = null;
-  
-  // we have hash of children
-  this.children = {};
-  
-  // check to see if the node is at the end
-  this.end = false;
-  
-  this.getWord = function() {
-    let output = [];
-    let node = this;
-
-    while (node !== null) {
-      output.unshift(node.key);
-      node = node.parent;
-    }
-
-    return output.join('');
-  };
-}
-
-const Trie = function() {
-  this.root = new TrieNode(null);
-  
-  // inserts a word into the trie.
-  this.insert = function(word) {
-    let node = this.root; // we start at the root
-
-    // for every character in the word
-    for(let i = 0; i < word.length; i++) {
-      // check to see if character node exists in children.
-      if (!node.children[word[i]]) {
-        // if it doesn't exist, we then create it.
-        node.children[word[i]] = new TrieNode(word[i]);
-
-        // we also assign the parent to the child node.
-        node.children[word[i]].parent = node;
-      }
-
-      // proceed to the next depth in the trie.
-      node = node.children[word[i]];
-
-      // finally, we check to see if it's the last word.
-      if (i == word.length-1) {
-        // if it is, we set the end flag to true.
-        node.end = true;
-      }
-    }
-  };
-  
-  // check if it contains a whole word.
-  this.contains = function(word) {
-    let node = this.root;
-
-    // for every character in the word
-    for(let i = 0; i < word.length; i++) {
-      // check to see if character node exists in children.
-      if (node.children[word[i]]) {
-        // if it exists, proceed to the next depth of the trie.
-        node = node.children[word[i]];
-      } else {
-        // doesn't exist, return false since it's not a valid word.
-        return false;
-      }
-    }
-
-    // we finished going through all the words, but is it a whole word?
-    return node.end;
-  };
-  
-  // returns true if there is any word with the given prefix
-  this.exists = function(prefix) {
-    let node = this.root;
-    let output = [];
-
-    // for every character in the prefix
-    for(let i = 0; i < prefix.length; i++) {
-      // make sure prefix actually has words
-      if (node.children[prefix[i]]) {
-        node = node.children[prefix[i]];
-      } else {
-        // there's none. just return it.
-        return false;
-      }
-    }
-
-    return true;
-  };
-  
-  // returns every word with given prefix
-  this.find = function(prefix) {
-    let node = this.root;
-    let output = [];
-
-    // for every character in the prefix
-    for(let i = 0; i < prefix.length; i++) {
-      // make sure prefix actually has words
-      if (node.children[prefix[i]]) {
-        node = node.children[prefix[i]];
-      } else {
-        // there's none. just return it.
-        return output;
-      }
-    }
-
-    // recursively find all words in the node
-    findAllWords(node, output);
-
-    return output;
-  };
-  
-  // recursive function to find all words in the given node.
-  const findAllWords = (node, arr) => {
-    // base case, if node is at a word, push to output
-    if (node.end) {
-      arr.unshift(node.getWord());
-    }
-
-    // iterate through each children, call recursive findAllWords
-    for (let child in node.children) {
-      findAllWords(node.children[child], arr);
-    }
-  }
-
-  // removes a word from the trie.
-  this.remove = function (word) {
-      let root = this.root;
-
-      if(!word) return;
-
-      // recursively finds and removes a word
-      const removeWord = (node, word) => {
-
-          // check if current node contains the word
-          if (node.end && node.getWord() === word) {
-
-              // check and see if node has children
-              let hasChildren = Object.keys(node.children).length > 0;
-
-              // if has children we only want to un-flag the end node that marks the end of a word.
-              // this way we do not remove words that contain/include supplied word
-              if (hasChildren) {
-                  node.end = false;
-              } else {
-                  // remove word by getting parent and setting children to empty dictionary
-                  node.parent.children = {};
-              }
-
-              return true;
-          }
-
-          // recursively remove word from all children
-          for (let key in node.children) {
-              removeWord(node.children[key], word)
-          }
-
-          return false
-      };
-
-      // call remove word on root node
-      removeWord(root, word);
-  };
-}
-
 const range_selection = range(100).map(x=>range(x));
 
 const splitsIndices = exported_data["split_indices"];
@@ -197,22 +9,9 @@ wordlist.forEach(w=>word_trie.insert(w));
 
 const long_words = wordlist.filter(x=>x.length > 11);
 
-var base_word = pick(long_words);
-word_splits = get_splits_of_word(base_word);
-word = pick( most_common_split( word_splits, 3 ) );
-
-LOGS(word);
-LOGS(word.reduce(sum));
-
 var guess = [];
 const guesses = [];
 var score = 0;
-var tiles = pad_out_blocks(word, 20).map(x=>[x]);
-tiles.sort().sort((x,y)=>x[0].length-y[0].length);
-tiles = [...tiles.filter((x,i)=>i%2==0), ...tiles.filter((x,i)=>i%2==1).reverse()];
-
-LOGS(tiles);
-drawTiles(tiles);
 
 function get_splits_of_word(w) {
 	return splitsIndices[w.length].map( x=>range_selection[x.length-1].map( i=>w.slice(x[i],x[i+1]) ) )
@@ -263,48 +62,67 @@ function longest_word_from_these_blocks(blocks, answer_word) {
 	return [long_words[0][0], words[long_words[0][1]].map(x=>blocks[x])];
 }
 
-function pad_out_blocks(answer_split, total_block_count) {
-	let answer_word = answer_split.reduce(sum);
-	let answer_length = answer_word.length;
-	let answer_set = new Set(answer_split);
-	let answer_splits_set = new Set(get_splits_of_word(answer_word).flat());
-	let result_blocks = new Set(answer_split);
-	let short_words = wordlist.filter(x=>x.length < answer_length && x.length > (answer_length/2));
-	shuffle(short_words);
-	
-	let doubles = range_selection[answer_split.length-1].map(i=>answer_split[i]+answer_split[i+1]);
-	let	min_double = M.min(...doubles.map(x=>x.length));
-	
-	// This lot compiles a list of splits of words for each adjacent pair of 
-	// blocks in the answer. Any blocks already in the answer are filtered out.
-	let good_friends = {};
-	range_selection[answer_split.length-1].forEach(i=>good_friends[i]=[]); // {i:[] for i in [1..answer_split.length-1]}
-	for (const w of short_words) {
+function get_shared_matches(word_split, word_list) {
+	let split_set = new Set(word_split);
+	let all_splits_set = new Set(get_splits_of_word(word_split.reduce(sum)).flat());
+	let doubles = range_selection[word_split.length-1].map(i=>word_split[i]+word_split[i+1]);
+	let	min_double = M.min(...doubles.map(len));
+	let shared_matches = {};
+	range_selection[word_split.length-1].forEach(i=>shared_matches[i]=[]); // {i:[] for i in [1..word_split.length-1]}
+	for (const w of word_list) {
 		if (w.length < min_double+3) break;
 		for (const i of range_selection[w.length - min_double]) {
 			let d_i = 0;
 			while ((d_i < doubles.length) && (w.slice(i,i+doubles[d_i].length) != doubles[d_i])) d_i += 1;
 			if (d_i < doubles.length) {
-				let s = get_splits_of_word(w).filter(x=>x.length < 5);
+				let s = get_splits_of_word(w).filter(x=>x.length < 6);
 				shuffle(s);
 				let j = 0;
-				while ((j < s.length) && (s[j].filter(x=>answer_set.has(x)).length < 2)) j += 1;
+				for (const jj of s.keys()) {
+					j = jj;
+					let matches = s[j].filter(x=>split_set.has(x));
+					if (matches.length != 2) {
+						j += 1;
+						continue;
+					}
+					let match_sj_is = Array.from(s[j].keys()).filter(x=>matches.indexOf(s[j][x])>=0);
+					let match_ans_is = Array.from(word_split.keys()).filter(x=>matches.indexOf(word_split[x])>=0);
+					if (s[j][match_sj_is[0]] == word_split[match_ans_is[0]]) {
+						break;
+					}
+					j += 1;
+				}
 				if (j < s.length) {
-					let sj = s[j].filter(x=>answer_split[d_i]!=x && answer_split[d_i+1]!=x);
-					if (sj.every(x=>!answer_splits_set.has(x)))
-						good_friends[d_i].push(sj);
+					let sj = s[j].filter(x=>word_split[d_i]!=x && word_split[d_i+1]!=x);
+					if (sj.every(x=>!all_splits_set.has(x)))
+						shared_matches[d_i].push(sj);
 				}
 			}
 		}
 	}
+	return shared_matches;
+}
+
+function pad_out_blocks(answer_split, total_block_count) {
+	let answer_word = answer_split.reduce(sum);
+	let answer_length = answer_word.length;
+	let result_blocks = new Set(answer_split);
+//	let short_words = words.filter(x=>x.length < answer_length && x.length > (answer_length/2));
+	let short_words = common.filter(x=>x.length < answer_length && x.length > (answer_length/2));
+	shuffle(short_words);
 	
-	Object.keys(good_friends).forEach(i=>shuffle(good_friends[i]));
-	while (result_blocks.size < total_block_count && Object.values(good_friends).flat().length > 0) {
+	let shared_matches = get_shared_matches(answer_split, short_words);
+	let worst_case = M.min(...Object.values(shared_matches).map(len));
+	LOGS(answer_split);
+	LOGS(worst_case);
+	
+	Object.keys(shared_matches).forEach(i=>shuffle(shared_matches[i]));
+	while (result_blocks.size < total_block_count && Object.values(shared_matches).flat().length > 0) {
 		let padding_words = [];
 		
-		for (n of Object.keys(good_friends)) {
-			if (good_friends[n].length == 0) continue;
-			let next_word = good_friends[n].pop();
+		for (n of Object.keys(shared_matches)) {
+			if (shared_matches[n].length == 0) continue;
+			let next_word = shared_matches[n].pop();
 			padding_words.push(next_word);
 		}
 		
@@ -314,6 +132,9 @@ function pad_out_blocks(answer_split, total_block_count) {
 			padding_words = padding_words.filter(w=>w.every(x=>!problem_blocks.has(x)));
 			longest_word = longest_word_from_these_blocks([...result_blocks, ...padding_words.flat()], answer_word);
 		}
+		
+		LOGS(padding_words.flat());
+		LOGS("r"+result_blocks.size+" + " + "p"+padding_words.flat().length + (result_blocks.size + padding_words.flat().length < total_block_count?" < ":" >= ") + total_block_count);
 		
 		if (result_blocks.size + padding_words.flat().length < total_block_count) {
 			padding_words.flat().forEach(x=>result_blocks.add(x));
@@ -340,7 +161,7 @@ function pad_out_blocks(answer_split, total_block_count) {
 		result_blocks = [...answer_split, ...rarities.slice(0,total_block_count - answer_split.length)];
 	}
 	
-	return result_blocks;
+	return [worst_case,result_blocks];
 }
 
 
@@ -449,21 +270,23 @@ function submitGuess() {
 	let gParts = guess.map(x => tiles[x].reduce(sum));
 	let gWord = gParts.reduce(sum);
 	let aWord = word.reduce(sum);
-	expandTilesGroups(guess, word);
-	guesses.push(gParts);
-	guess = [];
-	$.new(["div",...gParts.map(x=>["span",{"class":"wa-tile"},x])], $.id("wrong-answers"));
-	drawGuess(guess, tiles);
-	updateTiles(tiles);
-	if (gWord == aWord) {
-		$.id("finalword").innerHTML = gWord;
-		//$.id("finalscore").innerHTML = "Score: "+score;
-		$.id("scorelayer").classList.remove("hide");
+	if (word_trie.contains(gWord) || ((typeof dictionaryEpic !== "undefined") && (binarySearch(epic,gWord) >= 0))) {
+		expandTilesGroups(guess, word);
+		guesses.push(gParts);
+		guess = [];
+		$.new(["div",...gParts.map(x=>["span",{"class":"wa-tile"},x])], $.id("wrong-answers"));
+		drawGuess(guess, tiles);
+		updateTiles(tiles);
+		if (gWord == aWord) {
+			$.id("finalword").innerHTML = gWord;
+			//$.id("finalscore").innerHTML = "Score: "+score;
+			$.id("scorelayer").classList.remove("hide");
+		}
 	}
 }
 
 function addToGuess(tileIndex) {
-	if (guess.indexOf(tileIndex) < 0) {
+	if (guess.indexOf(tileIndex) < 0 && guess.map(x=>tiles[x]).flat().length < 10) {
 		guess.push(tileIndex);
 	}
 }
@@ -528,6 +351,44 @@ function toggleHelpPageRight() {
 	if (activePage > 1) $.id('sidemaskl').classList.add('active');
 	if (activePage >= maxPage) $.id('sidemaskr').classList.remove('active');
 }
+
+var base_word = "";
+var word_splits = [];
+var word = [];
+var tiles = [];
+
+let fun = false;
+while (!fun) {
+	base_word = pick(long_words);
+	word_splits = get_splits_of_word(base_word);
+	word = pick( most_common_split( word_splits, 3 ) );
+
+	[worst,tiles] = pad_out_blocks(word, 20);
+	tiles = tiles.map(x=>[x]);
+	tiles.sort().sort((x,y)=>x[0].length-y[0].length);
+	tiles = [...tiles.filter((x,i)=>i%2==0), ...tiles.filter((x,i)=>i%2==1).reverse()];
+	
+	let tile_letters = tiles.flat().reduce(sum);
+	let tile_letter_set = new Set(tile_letters);
+	
+	let ratio = tile_letter_set.size / tile_letters.length;
+	let most_common = M.max(...Array.from(tile_letter_set.values()).map(x=>Array.from(tile_letters.matchAll(x)).length));
+
+	LOG(tile_letter_set.size);
+	LOG(ratio);
+	LOG(most_common);
+
+	//fun = (tile_letter_set.size / tile_letters.length) > 0.36;
+	//fun = most_common < 7;
+	fun=worst>0;
+}
+
+LOGS(word);
+LOGS(word.reduce(sum));
+LOGS(tiles);
+
+drawTiles(tiles);
+
 
 //$.id("scorelayer").setAttribute("onClick", "answers.hideScore()");
 $.q("body")[0].addEventListener("click", hideHelpLayer);

@@ -93,7 +93,7 @@ body.accessible {
 }
 @media (max-aspect-ratio: 2/3) {
 	div.middle {
-		height: 90vh;
+		height: 85vh;
 		margin-top: 5vh;
 	}
 }

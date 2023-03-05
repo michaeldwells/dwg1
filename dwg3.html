@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+	<title>Disappointing Word Game Number Three</title>
+	<link rel="icon" type="image/png" href="dwg3.png">
+	<link rel="stylesheet" type="text/css" href="dwg3.css" />
+</head>
+
+<body>
+<div id="help-button" class="hide-layer"></div>
+<div id="help-layer" class="hide-layer">
+	<div id="help-close-button" class="close-button"></div>
+	<div id="help-page-1" class="help-page show-page-1">
+		<h1>+ How to Play +</h1>
+	</div>
+
+	<div id="help-page-2" class="help-page show-page-1">
+		<h1>+ Notes +</h1>
+	</div>
+	<div id="side-mask-l" class="side-mask-l"><p>‹</p></div>
+	<div id="side-mask-r" class="side-mask-r active"><p>›</p></div>
+</div>
+<div id="game-panel" class="hide-layer">
+	<div id="puzzle">
+		<div id="outer-grid">
+			<div id="outer-top-left">
+			</div>
+			<div id="outer-top-center">
+				<div id="space0" class="space" onclick="clickSpace(0)"><div class="tile verticle top"></div></div>
+				<div id="space1" class="space" onclick="clickSpace(1)"><div class="tile verticle top"></div></div>
+				<div id="space2" class="space" onclick="clickSpace(2)"><div class="tile verticle top"></div></div>
+			</div>
+			<div id="outer-top-right">
+			</div>
+			<div id="outer-mid-left">
+				<div id="space11" class="space" onclick="clickSpace(11)"><div class="tile left"></div></div>
+				<div id="space10" class="space" onclick="clickSpace(10)"><div class="tile left"></div></div>
+				<div id="space9" class="space" onclick="clickSpace(9)"><div class="tile left"></div></div>
+			</div>
+			<div id="outer-mid-center">
+				<div id="inner-grid">
+					<div id="inner-top-left">
+					</div>
+					<div id="inner-top-center">
+					</div>
+					<div id="inner-top-right">
+					</div>
+					<div id="inner-mid-left">
+					</div>
+					<div id="inner-mid-center">
+					</div>
+					<div id="inner-mid-right">
+					</div>
+					<div id="inner-bot-left">
+					</div>
+					<div id="inner-bot-center">
+					</div>
+					<div id="inner-bot-right">
+					</div>
+				</div>
+			</div>
+			<div id="outer-mid-right">
+				<div id="space3" class="space" onclick="clickSpace(3)"><div class="tile right"></div></div>
+				<div id="space4" class="space" onclick="clickSpace(4)"><div class="tile right"></div></div>
+				<div id="space5" class="space" onclick="clickSpace(5)"><div class="tile right"></div></div>
+			</div>
+			<div id="outer-bot-left">
+			</div>
+			<div id="outer-bot-center">
+				<div id="space8" class="space" onclick="clickSpace(8)"><div class="tile verticle bottom"></div></div>
+				<div id="space7" class="space" onclick="clickSpace(7)"><div class="tile verticle bottom"></div></div>
+				<div id="space6" class="space" onclick="clickSpace(6)"><div class="tile verticle bottom"></div></div>
+			</div>
+			<div id="outer-bot-right">
+			</div>
+		</div>
+	</div>
+	<div id="tiles"></div>
+</div>
+<div id="score-layer" class="popup-layer hide">
+	<div id="results-outer">
+		<div id="results-inner">
+			<p id="links">
+				<span id="share">Share this puzzle</span>
+				<a id="retry" href="dwg2.html">Try another puzzle</a>
+			</p>
+		</div>
+	</div>
+</div>
+
+<script src="x.js"></script>
+
+<script src="common.js"></script>
+<script src="dwg3.js"></script>
+</body>

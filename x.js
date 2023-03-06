@@ -84,6 +84,7 @@ function binarySearch(sortedArray, key) {
             end = middle - 1;
         }
     }
+	if (end < 0) return end;
     return (-1)*end;
 }
 

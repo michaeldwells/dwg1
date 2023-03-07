@@ -518,6 +518,12 @@ div.tile ::selection {
 	align-items: end;
 	transition: visibility 2s 1s, opacity 2s 1s;
 }
+@media (max-aspect-ratio: 9/12) {
+	div#score-layer.popup-layer {
+		height: 85vh;
+	}
+}
+
 #results-outer {
 /*	padding: var(--font-small);*/
 	border-block: var(--line-thick) double var(--pop-ac-color);
@@ -527,7 +533,7 @@ div.tile ::selection {
 	font-size: var(--font-small);
 	max-width: 95%;
 	border-radius: 0.5em;
-	margin-bottom: calc(3em + env(safe-area-inset-bottom));
+	margin-bottom: calc(4.5em + env(safe-area-inset-bottom));
 }
 #results-inner {
 	display: flex;

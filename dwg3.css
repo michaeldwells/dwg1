@@ -259,6 +259,25 @@ div#help-layer:hover .close-button {
 	justify-content: space-evenly;
 	align-items: center;
 }
+@media (max-aspect-ratio: 9/15) {
+	div#game-panel {
+		font-size: var(--font-big);
+	}
+}
+@media (max-width: 260px) {
+	body div#game-panel {
+		font-size: var(--font-small);
+	}
+}
+@media (max-height: 330px) {
+	body div#game-panel {
+		width: 100%;
+		font-size: var(--font-small);
+	}
+	div#tiles {
+		width: 100%;
+	}
+}
 #puzzle {
 	width: 100%;
 }
@@ -508,7 +527,7 @@ div.tile ::selection {
 	font-size: var(--font-small);
 	max-width: 95%;
 	border-radius: 0.5em;
-	margin-bottom: 2em;
+	margin-bottom: calc(3em + env(safe-area-inset-bottom));
 }
 #results-inner {
 	display: flex;

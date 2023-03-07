@@ -53,7 +53,7 @@
 	--pop-bg-clear: #2210;
 	--pop-ac-color: #fe8;
 	--basis-skewed: min(80vh, 100vw);
-	--font-small: max(8pt, calc(var(--basis-skewed) / 24));
+	--font-small: max(8pt, calc(var(--basis-skewed) / 28));
 	--font-med: calc(var(--font-small) * 1.33);
 	--font-big: calc(var(--font-small) * 1.5);
 	--font-huge: calc(var(--font-small) * 2.67);
@@ -79,29 +79,7 @@ body.accessible {
 	touch-action: auto;
 }
 
-@media (max-aspect-ratio: 1/1) {
-	div#game-panel {
-		grid-template-rows: 4em 1fr max-content;
-	}
-}
-@media (max-aspect-ratio: 2/3) {
-	div#game-panel {
-		height: 85vh;
-		margin-top: 5vh;
-	}
-}
-
 @media (max-width: 400px) {
-	div#game-panel {
-		grid-template-rows: 3em 1fr max-content;
-	}
-	div#game-panel #tiles {
-		font-size: var(--font-big);
-	}
-	div#enter {
-		font-size: var(--font-huge);
-		left: calc(100% - 1.8em);
-	}
 	div#helpbutton {
 		padding: 1rem 0 1rem 1rem;
 	}
@@ -387,7 +365,7 @@ div#help-layer:hover .close-button {
 #puzzle.tile-selected #outer-bot-center > div.open:after {
 	content: '↑';
 }
-#puzzle div.open:hover {
+#puzzle:not(.success) div.open:hover {
 	color: var(--fg-color);
 	cursor: pointer;
 }
@@ -398,8 +376,11 @@ div#help-layer:hover .close-button {
 	grid-template-columns: 1fr 1fr 1fr;
 	justify-items: center;
 	border: 1px dashed var(--ac-color);
+	padding: 1px;
+	transition: border 0.4s, padding 0.4s;
 }
 #puzzle.success #inner-grid {
+	padding: 0;
 	border: 2px solid var(--pop-ac-color);
 }
 #inner-grid  > div {
@@ -413,9 +394,11 @@ div#help-layer:hover .close-button {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	/*position: fixed;
-	bottom: 0.5em;*/
 	background: var(--bg-color);
+	transition: filter 2s 1s;
+}
+#tiles.success {
+	filter: opacity(0%);
 }
 .tile {
 	float: left;
@@ -429,6 +412,9 @@ div#help-layer:hover .close-button {
 	cursor: pointer;
 	padding: 0.2em 0.6em 0.2em 0.4em;
 	font-size: smaller;
+}
+.success .tile {
+	cursor: default;
 }
 div.tile ::selection {
 	background: #0000;
@@ -507,35 +493,46 @@ div.tile ::selection {
 	transition: visibility 1s, opacity 1s;
 	-webkit-tap-highlight-color: transparent;
 }
-#score-layer {
+#score-layer.popup-layer {
 	/*cursor: pointer;*/
+	width: 100%;
+	align-items: end;
+	transition: visibility 2s 1s, opacity 2s 1s;
 }
 #results-outer {
-	padding: var(--font-small);
-	border: var(--line-thick) double var(--pop-ac-color);
+/*	padding: var(--font-small);*/
+	border-block: var(--line-thick) double var(--pop-ac-color);
 	color: var(--pop-ac-color);
-	background: var(--pop-bg-solid);
-	font-family: Bodoni Moda, serif;
+/*	background: var(--pop-bg-solid);*/
+	font-family: Forum, serif;
 	font-size: var(--font-small);
 	max-width: 95%;
+	border-radius: 0.5em;
+	margin-bottom: 2em;
 }
 #results-inner {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 100%;
+/*	width: 100%;*/
 	height: 100%;
-	padding: var(--font-med);
+	padding: 0.5em;
+	margin-inline: 0.5em;
 /*	border-image: radial-gradient(ellipse 71% 71% at center, var(--pop-bg-color) 80%, var(--pop-ac-color) 97%) 2% / var(--line-thin);*/
-	border: var(--line-thin) solid var(--pop-bg-clear);
+/*	border: var(--line-thin) solid var(--pop-bg-clear);
 	border-image-source: radial-gradient(ellipse 71% 71% at center, var(--pop-bg-color) 80%, var(--pop-ac-color) 97%);
 	border-image-slice: 2%;
-	border-image-width: var(--line-thin);
+	border-image-width: var(--line-thin);*/
 	text-align: center;
+}
+#results-inner h1 {
+	font-weight: 400;
+	margin: 0;
 }
 #links {
 	display: flex;
 	width: 100%;
+/*	margin-bottom: 0;*/
 	justify-content: space-around;
 }
 #links > * {

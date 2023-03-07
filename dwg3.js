@@ -5,7 +5,7 @@ const reverse = x => Array.from(x).map((x,i,a)=>a.at(-1-i)).reduce(sum,"");
 const tile_count = 12;
 
 let c6 = common.filter(x=>x.length == 6);
-let tris_flat = c6.map(x=>([0,1,2].map(n=>x.slice(n,n+3)))).flat();
+let tris_flat = c6.map(x=>([0,1,2,3].map(n=>x.slice(n,n+3)))).flat();
 let tris_set = new Set(tris_flat);
 let trif = {};
 tris_set.forEach(x=>trif[x]=0);
@@ -113,7 +113,6 @@ let cols = transpose(rows).map(x=>Array.from(x).reduce(sum));
 LOG(rows);
 LOG(cols);
 
-let mids = [...cols, ...rows, ...revA(cols), ...revA(rows)];
 
 /*
 let fore = [...rows, ...cols];
@@ -132,19 +131,34 @@ let tiles = game_words.map((x,i)=>x.slice(0,x.indexOf(all[i+fb[i]]))+x.slice(x.i
 */
 let all = [...rows, ...cols];
 let all_words = all.map(t=>c6.filter(x=>x.includes(t)));
+let all_tris = all_words.map((y,i)=>y.map(x=>x.slice(0,x.indexOf(all[i]))+x.slice(x.indexOf(all[i])+3)));
+let tiles;
+let panic = 20;
+do {panic -= 1;tiles = all_tris.map(x=>opt(x));} while (panic > 0 && new Set([...tiles,...tiles.map(reverse)]).size < tiles.length*2);
 LOG(all_words);
-let game_words = all_words.map(x=>opt(x));
-let tiles = game_words.map((x,i)=>x.slice(0,x.indexOf(all[i]))+x.slice(x.indexOf(all[i])+3));
+//let game_words = all_words.map(x=>opt(x));
+//let tiles = game_words.map((x,i)=>x.slice(0,x.indexOf(all[i]))+x.slice(x.indexOf(all[i])+3));
 tiles = tiles.map(x=>opt([0,1])==0 ? x : reverse(x));
 
-let banned_tris = new Set(all_words.map(x=>([0,1,2].map(n=>x.slice(n,n+3)))).flat());
-let free_tris = Array.from(set_diff(tris_set, banned_tris));
+let mid_tris = [...rows, ...cols].map(x=>[x,reverse(x)]).flat();
+let used_tris = new Set([...rows, ...cols, ...tiles].map(x=>[x,reverse(x)]).flat());
 
-shuffle(free_tris);
-while (tiles.length < tile_count && free_tris.length > 0)
-	tiles.push(free_tris.pop());
+while (tiles.length < tile_count) {
+	let next_word = opt(c6);
+	let off_tris = [0,1,2,3].map(n=>[...next_word.slice(0,n), ...next_word.slice(n+3,6)].reduce(sum));
+	shuffle(off_tris);
+	let nex_tri;
+	do {
+		next_tri = off_tris.pop();
+	} while (off_tris.length > 0 && used_tris.has(next_tri));
+	if (used_tris.has(next_tri)) continue;
+	if (mid_tris.every(x=>[0,1,2,3].every(n=>binarySearch(c6,[...next_tri.slice(0,n), ...x, ...next_tri.slice(n,4)].reduce(sum)) < 0) ) ) {
+		tiles.push(next_tri);
+		used_tris.add(next_tri);
+	}
+}
 
-LOG(game_words);
+//LOG(game_words);
 LOG(tiles);
 
 Xid("inner-top-left").innerHTML   = rows[0][0];
@@ -160,11 +174,12 @@ Xid("inner-bot-right").innerHTML  = rows[2][2];
 shuffle(tiles);
 tiles.forEach((x,i)=>Xnew(["div",{"id":"tile"+i,"class":"tile","onClick":"clickTile("+i+");"}, ...Array.from(x).map(y=>["div",{"class":"letter"},y])],"#tiles"));
 
-tilePlacement = tiles.map(x=>[-1,-1]);
-spaces = ranges100[12].map(x=>[-1,-1]);
-spacePairs = [8,7,6,11,10,9,2,1,0,5,4,3];
-backSpaces = [false,false,false,true,true,true,true,true,true,false,false,false];
-activeTile = -1;
+let tilePlacement = tiles.map(x=>[-1,-1]);
+let spaces = ranges100[12].map(x=>[-1,-1]);
+const spacePairs = [8,7,6,11,10,9,2,1,0,5,4,3];
+const backSpaces = [false,false,false,true,true,true,true,true,true,false,false,false];
+const mids = [...cols, ...rows, ...revA(cols), ...revA(rows)];
+let activeTile = -1;
 
 ///////////////////////////////////////////////////////////////////////////////
 /* UI Functions                                                              */
@@ -200,7 +215,7 @@ function clickSpace(n) {
 			}
 		}
 	} else {
-		if (spaces[n][0] < 0 || spaces[spacePairs[n]][0] < 0) {
+		if (spaces[n][0] < 0 && spaces[spacePairs[n]][0] < 0) {
 			tilePlacement[activeTile] = [n,0];
 			spaces[n] = [activeTile, 0];
 			activeTile = -1;
@@ -283,6 +298,8 @@ function updateTiles() {
 	}
 	if (checkSuccess()) {
 		Xid("puzzle").classList.add("success");
+		Xid("tiles").classList.add("success");
+		Xid("score-layer").classList.remove("hide");
 		Array.from(Xcs("tile")).forEach(x=>x.setAttribute("onclick", ""));
 		Array.from(Xcs("space")).forEach(x=>x.setAttribute("onclick", ""));
 	}

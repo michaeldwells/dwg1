@@ -1,0 +1,72 @@
+#keyboard {
+    align-self: center;
+    flex-shrink: 0;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}
+
+html {
+    overflow: hidden;
+}
+
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+#game-panel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;    
+    justify-content: space-between;
+    align-items: center;
+}
+#game-board {
+    width: 100%;
+    max-height: calc(100% - 8em);
+    max-width: 18em;
+    padding: 1em 1em 0 1em;
+    flex-shrink: 1;
+}
+#game-guess {
+    text-align: center;
+    font-size: 1.5em;
+    height: 1.4em;
+    border-bottom: solid;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}
+#game-answers {
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: 100%;
+    padding: 0.5em;
+}
+#game-answers::-webkit-scrollbar {
+    display:none;
+}
+.game-score-line {
+    display: flex;
+    justify-content: space-between;
+    transition: color var(--fade-delay);
+}
+#game-panel.win .game-score-line {
+    color: var(--ac-color);
+}
+#game-panel.win .game-score-line:last-child {
+    color: var(--pop-ac-color);
+}
+
+#win-layer {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    z-index: 3;
+    width: var(--side-width);
+    border-block: medium solid var(--pop-ac-color);
+    margin-block: 2em;
+    color: var(--pop-ac-color);
+    text-align: center;
+    contain: content;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}

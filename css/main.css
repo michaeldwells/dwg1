@@ -1,0 +1,104 @@
+/* Top Right Bottom Left      */
+
+/* -block  = -top  + -bottom  */
+/* -inline = -left + -right   */
+
+/* vw vh vmin vmax vb(lock) vi(nline) */
+/* svw svh svmin svmax svb(lock) svi(nline) */
+
+/* container-type:
+   cqw cqh cqmin cqmax cqb(lock) cqi(nline) */
+
+/*
+    If the position property is static, relative, or sticky, the containing block is formed by the edge of the content box of the nearest ancestor element that is either a block container (such as an inline-block, block, or list-item element) or establishes a formatting context (such as a table container, flex container, grid container, or the block container itself).
+	
+    If the position property is absolute, the containing block is formed by the edge of the padding box of the nearest ancestor element that has a position value other than static (fixed, absolute, relative, or sticky).
+	
+    If the position property is fixed, the containing block is established by the viewport (in the case of continuous media) or the page area (in the case of paged media).
+	
+    If the position property is absolute or fixed, the containing block may also be formed by the edge of the padding box of the nearest ancestor element that has the following:
+        A transform or perspective value other than none
+        A will-change value of transform or perspective
+        A filter value other than none or a will-change value of filter (only works on Firefox).
+        A contain value of paint (e.g. contain: paint;)
+        A backdrop-filter other than none (e.g. backdrop-filter: blur(10px);)
+*/
+
+
+@font-face {
+    font-family: "Forum";
+    src: url("fonts/Forum-Regular.ttf");
+}
+@font-face {
+    font-family: "Bodoni Moda";
+    src: url("fonts/BodoniModa-VariableFont_opsz,wght.ttf");
+}
+@font-face {
+    font-family: "Montserrat";
+    src: url("fonts/Montserrat-VariableFont_wght.ttf");
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Federo&family=Forum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+:root {
+    --bg-color: #222;
+    --fg-color: #eee;
+    --ac-color: #999;
+    --used-color: #3d3d3d;
+    --pop-bg-color: #221e;
+    --pop-bg-solid: #221;
+    --pop-bg-clear: #2210;
+    --pop-ac-color: #fe8;
+    --basis-skewed: min(80vh, 100vw);
+    --font-small: max(8pt, calc(var(--basis-skewed) / 28));
+    --font-med: calc(var(--font-small) * 1.33);
+    --font-big: calc(var(--font-small) * 1.5);
+    --font-huge: calc(var(--font-small) * 2.67);
+    --line-thin: max(0.125vmin, 1px);
+    --line-med: max(0.2vmin, 2px);
+    --line-thick: max(0.5vmin, 3px);
+    --margin-small: calc(var(--font-small) * 2);
+    --margin-big: calc(var(--font-small) * 4);
+    --side-width: min(95%, 36rem);
+    --fade-delay: 0.8s;
+    --fade-delay-start: 0.4s;
+    -webkit-tap-highlight-color: transparent;
+}
+* {
+    box-sizing: border-box;
+}
+html {
+    height: 100%;
+    touch-action: none;
+    /*overflow: visible hidden;*/
+}
+body.accessible {
+    touch-action: auto;
+}
+
+@media (max-width: 400px) {
+    div#helpbutton {
+        padding: 1rem 0 1rem 1rem;
+    }
+}
+
+html body *.hide {
+    visibility: hidden;
+    opacity: 0;
+}
+
+body {
+    height: 98%;
+    font-size: var(--font-big);
+    font-family: Montserrat, serif;
+    font-weight: normal;
+    background: var(--bg-color);
+    color: var(--fg-color);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: start;
+}

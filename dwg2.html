@@ -5,8 +5,8 @@
 	<meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
 	<title>Disappointing Word Game Number Two</title>
-	<link rel="icon" type="image/png" href="dwg2.png">
-	<link rel="stylesheet" type="text/css" href="dwg2.css" />
+	<link rel="icon" type="image/png" href="media/dwg2.png">
+	<link rel="stylesheet" type="text/css" href="css/dwg2.css" />
 </head>
 
 <body>
@@ -15,17 +15,20 @@
 	<div id="leftclosebutton" class="closebutton"></div>
 	<div id="leftpage1" class="leftpage showpage1">
 		<h1>+ How to Play +</h1>
-		<p>Combine the blocks to find the longest possible word.</p> <p>You may 
-		guess as often as you like.</p> <p>If part of your guess is in the solution, 
-		those blocks will be combined.</p>
+		<p>Combine the blocks to find the longest possible word.</p>
+		<p>You may guess as often as you like, but each guess must be in the 
+		dictionary.</p>
+		<p>To help you, if any part of your guess is in the solution, the 
+		matching blocks will be permanently combined.</p>
 	</div>
 
 	<div id="leftpage2" class="leftpage showpage1">
 		<h1>+ Notes +</h1>
-		<p>Sometimes it seems too easy. Often I find it nearly impossible.</p>
-		<p>I'm considering a light scoring mechanism whereby you're punished 
-		for guesses that aren't in the dictionary, and possibly a limit to the 
-		number of guesses allowed.</p>
+		<p>The dictionary for validating guesses is much bigger than 
+		the one used to generate the puzzle, so it is possible that a longer 
+		word than the solution will be accepted as a guess.</p>
+		<p>There is currently no mechanism for giving up and finding out what 
+		the answer was.</p>
 	</div>
 	<div id="sidemaskl" class="sidemaskl"><p>‹</p></div>
 	<div id="sidemaskr" class="sidemaskr active"><p>›</p></div>
@@ -45,17 +48,17 @@
 			<p id="finalword"></p>
 			<p id="links">
 				<span id="share">Share this puzzle</span>
-				<a id="retry" href="dwg2.html">Try another puzzle</a>
+				<a id="retry" href="dwg2.html?random">Try another puzzle</a>
 			</p>
 			<!--<p id="finalscore">Score: 0</p>-->
 		</div>
 	</div>
 </div>
 
-<script src="dollar.js"></script>
+<script src="js/x.js"></script>
 
-<script src="common.js"></script>
-<script src="wordgamedata.js"></script>
-<script src="dwg2.js"></script>
-<script src="epic.js"></script>
+<script src="js/wordlists/common.js"></script>
+<script src="js/wordlists/wordgamedata.js"></script>
+<script src="js/dwg2.js"></script>
+<script src="js/wordlists/epic.js"></script>
 </body>

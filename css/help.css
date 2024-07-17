@@ -1,0 +1,154 @@
+/*****************************************************************************/
+/* HELP SECTION                                                              */
+/*****************************************************************************/
+
+/*-Help Button---------------------------------------------------------------*/
+#help-button {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: env(safe-area-inset-top);
+    left: env(safe-area-inset-right);
+    width: 1.8em;
+    padding: 1rem 0 1rem 2rem;
+    color: var(--ac-color);
+    font-size: var(--font-huge);
+    cursor: pointer;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}
+#help-button::after {
+    content: "+";
+}
+div.hide-layer {
+    visibility: hidden;
+    opacity: 0;
+}
+  
+/*-Help Screen---------------------------------------------------------------*/
+#help-layer {
+    position: absolute;
+    display: block;
+    contain: content;
+    z-index: 3;
+    width: var(--side-width);
+    height: 24em;
+    padding-block: 1em;
+    border: var(--line-thin) solid var(--pop-ac-color);
+    margin-block: var(--margin-small);
+    color: var(--pop-ac-color);
+    background: var(--pop-bg-solid);
+    font-size: var(--font-small);
+    font-family: Forum, serif;
+    text-align: center;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}
+div#help-layer:hover {
+    filter: none;
+}
+.close-button {
+    top: 0;
+    position: fixed;
+    padding: 0.5em 1em 1em 1em;
+    transition: opacity 0.6s;
+    z-index: 5;
+    cursor: pointer;
+}
+@media (hover: hover) {
+    .close-button {
+        opacity: 0%;
+    }
+}
+div#help-layer:hover .close-button {
+    opacity: 100%;
+}
+.close-button::after {
+    font-family: Urbanist, sans-serif;
+    font-size: var(--font-big);
+    content: '×';
+}
+#help-page-2, #help-page-3 {
+position: fixed;
+top: 1em;
+    width: 100%;
+}
+#help-page-1 {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+#help-page-1.show-page-1 {translate: 0em;   opacity: 100%}
+#help-page-1.show-page-2 {translate: -26em; opacity: 0%}
+#help-page-1.show-page-3 {translate: -26em; opacity: 0%}
+#help-page-2.show-page-1 {translate: 26em;  opacity: 0%}
+#help-page-2.show-page-2 {translate: 0em;   opacity: 100%}
+#help-page-2.show-page-3 {translate: -26em; opacity: 0%}
+#help-page-3.show-page-1 {translate: 26em;  opacity: 0%}
+#help-page-3.show-page-2 {translate: 26em;  opacity: 0%}
+#help-page-3.show-page-3 {translate: 0em;   opacity: 100%}
+#help-page-1, #help-page-2, #help-page-3 {
+    padding-inline: var(--margin-small);
+    transition: translate 1s, opacity 1s;
+}
+#help-layer .side-mask-l,
+#help-layer .side-mask-r {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    z-index: 4;
+    color: var(--pop-ac-color);
+}
+#help-layer .side-mask-l.active,
+#help-layer .side-mask-r.active {
+    cursor: pointer;
+}
+#help-layer .side-mask-l p,
+#help-layer .side-mask-r p {
+    font-size: var(--font-huge);
+    transition: opacity 1s;
+}
+@media (hover: hover) {
+    #help-layer .side-mask-l p,
+    #help-layer .side-mask-r p {
+        opacity: 0%;
+    }
+    #help-layer:hover .side-mask-l.active p,
+    #help-layer:hover .side-mask-r.active p {
+        opacity: 100%;
+    }
+}
+#help-layer .side-mask-l:not(.active) p,
+#help-layer .side-mask-r:not(.active) p {
+    opacity: 0%;
+}
+#help-layer .side-mask-l {
+    width: 2em;
+    padding-inline: 0.5em;
+    background-image: linear-gradient(to right, var(--pop-bg-solid), var(--pop-bg-clear));
+}
+#help-layer .side-mask-r {
+    width: 2em;
+    padding-inline: 0.5em;
+    right: 0em;
+    background-image: linear-gradient(to left, var(--pop-bg-solid), var(--pop-bg-clear));
+}
+
+#help-layer h1 {
+    font-size: 150%;
+    font-weight: normal;
+}
+#help-layer p {
+    margin: 0.8em 0;
+    text-align: justify;
+    word-spacing: 0.12em;
+}
+#help-layer hr {
+    height: var(--line-med);
+    width: 5%;
+    border-style: dashed;
+}
+/*                                                                           */
+/* END of HELP SECTION                                                       */
+/*****************************************************************************/

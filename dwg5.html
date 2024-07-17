@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+	<title>Disappointing Word Game Number Five</title>
+	<link rel="icon" type="image/png" href="media/dwg5.png">
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<link rel="stylesheet" type="text/css" href="css/help.css" />
+	<link rel="stylesheet" type="text/css" href="css/keyboard.css" />
+	<link rel="stylesheet" type="text/css" href="css/dwg5.css" />
+</head>
+
+<body>
+<div id="help-button" class="hide"></div>
+<div id="help-layer" class="hide">
+	<div id="help-close-button" class="close-button"></div>
+	<div id="help-page-1" class="help-page show-page-1">
+		<h1>+ How to Play +</h1>
+		<p>
+You are trying to guess a word of no less than three and no more than nine 
+letters. Your guesses will be given a percentage score based on how many 
+letters they have in common with the answer, and how close those letters are 
+to the correct positions.
+		</p>
+		<p>
+It will likely take you several dozen guesses to find the solution. To help, 
+the letters for any guess that scores zero percent will be grayed out on the 
+keyboard.
+		</p>
+	</div>
+
+	<div id="help-page-2" class="help-page show-page-1">
+		<h1>+ Notes +</h1>
+	</div>
+	<div id="side-mask-l" class="side-mask-l"><p>‹</p></div>
+	<div id="side-mask-r" class="side-mask-r active"><p>›</p></div>
+</div>
+<div id="game-panel"></div>
+<div id="win-layer" class="hide">
+	<p><a href="?random">Try another puzzle</a></p>
+</div>
+
+<script src="js/x.js"></script>
+
+<script src="js/wordlists/common.js"></script>
+<script src="js/keyboard.js"></script>
+<script src="js/dwg5.js"></script>
+<script src="js/help.js"></script>
+<script src="js/wordlists/rare.js"></script>
+<script src="js/wordlists/epic.js"></script>
+</body>

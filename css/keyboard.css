@@ -1,0 +1,36 @@
+.keyboard {
+    width: 18em;
+}
+.keyboard-row {
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+}
+#keyboard-row-mid { width:95%; }
+.keyboard-key {
+    flex: 1;
+    padding: 0.1em;
+    border: solid var(--line-thin) #000;
+    margin: 0.2em;
+    text-align: center;
+    background-color: #1114;
+    cursor: pointer;
+}
+.keyboard-key:hover {
+    border-color: var(--pop-ac-color);
+    background-color: #fe81;
+}
+.keyboard-key.absent {
+    filter: brightness(60%) blur(0.03em);
+}
+.keyboard-key.absent:hover {
+    filter: brightness(60%);
+}
+#key-del, #key-enter {
+    font-size: 0.5em;
+    margin-block: auto;
+    padding-block: 0.8em;
+}
+#key-del {
+    padding-inline: 0.8em;
+}

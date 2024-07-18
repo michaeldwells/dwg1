@@ -10,7 +10,7 @@
 .keyboard-key {
     flex: 1;
     /*padding: 0.1em;*/
-    padding: 0.2em 0.1em;
+    padding: 0.3em 0.1em;
     border: solid var(--line-thin) #000;
     margin: 0.2em;
     text-align: center;

@@ -74,6 +74,11 @@ html {
     height: 100%;
     touch-action: none;
     /*overflow: visible hidden;*/
+    
+    /* Disable Text Selection */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 body.accessible {
     touch-action: auto;

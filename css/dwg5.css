@@ -24,7 +24,7 @@ a {
 }
 #game-board {
     width: 100%;
-    max-height: calc(100% - 8em);
+    max-height: calc(100% - 9em);
     max-width: 18em;
     padding: 1em 1em 0 1em;
     flex-shrink: 1;

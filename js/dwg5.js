@@ -41,21 +41,26 @@ function scoreGuess(guess, answer) {
 	let minLength = M.min(guess.length, answer.length);
 	let maxLength = M.max(guess.length, answer.length);
 
-	for (let x = 0; x < minLength; x += 1) {
+	for (let x = 0; x < answer.length; x += 1) {
+		//LOGS("X"+x);
+		//LOGS("A+"+answer[x]);
 		for (let r = 0; r < maxLength; r += 1) {
+			//LOGS(r+"="+guess[x + r]+"-"+guess[x - r]+"=");
 			if ((x+r < guess.length) && guess[x + r] === answer[x]) {
-				score += 1.0/(2 ** r); break;
+				score += 1.0/(2 ** r); /* LOGS(r+"+"+1.0/(2 ** r)); */ break;
 			}
-			if ((x-r > 0) && guess[x - r] === answer[x]) {
-				score += 1.0/(2 ** r); break;
+			if ((x-r >= 0) && guess[x - r] === answer[x]) {
+				score += 1.0/(2 ** r); /* LOGS(r+"-"+1.0/(2 ** r)); */ break;
 			}
 		}
+		//LOGS("A-"+answer[answer.length-1-x]);
 		for (let r = 0; r < maxLength; r += 1) {
+			//LOGS(r+"="+guess[guess.length-1-x-r]+"-"+guess[guess.length-1-x+r]+"=");
 			if ((x+r < guess.length) && guess[guess.length-1-x-r] === answer[answer.length-1-x]) {
-				score += 1.0/(2 ** r); break;
+				score += 1.0/(2 ** r); /* LOGS(1.0/(2 ** r)+"+"+r); */ break;
 			}
-			if ((x-r > 0) && guess[guess.length-1-x+r] === answer[answer.length-1-x]) {
-				score += 1.0/(2 ** r); break;
+			if ((x-r >= 0) && guess[guess.length-1-x+r] === answer[answer.length-1-x]) {
+				score += 1.0/(2 ** r); /* LOGS(1.0/(2 ** r)+"-"+r); */ break;
 			}
 		}
 	}

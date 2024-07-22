@@ -6,10 +6,9 @@
     justify-content: space-around;
     margin: auto;
 }
-#keyboard-row-mid { width:95%; }
+#keyboard-row-mid { width:90%; }
 .keyboard-key {
     flex: 1;
-    /*padding: 0.1em;*/
     padding: 0.3em 0.1em;
     border: solid var(--line-thin) #000;
     margin: 0.2em;
@@ -29,10 +28,12 @@
 }
 #key-del, #key-enter {
     font-size: 0.5em;
-    margin-block: auto;
-    /*padding-block: 0.8em;*/
-    padding-block: 1.22em;
+    margin: auto 0.4em;
+    padding: 1.22em 0.2em;
 }
 #key-del {
-    padding-inline: 0.8em;
+    padding-inline: 1.06em;
+}
+#key-enter {
+    padding-inline: 0.38em;
 }

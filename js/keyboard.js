@@ -12,7 +12,7 @@ function drawKeyboard(parent) {
 			properties["id"]      = "key-" + letter;
 			properties["onClick"] = "keyboardCallback(\"" + letter + "\");";
 
-			append(lineDiv, ["div", properties, letter.toUpperCase()]);
+			append(lineDiv, [ "div", properties, ["span", {"class":"symbol"}, letter.toUpperCase()] ]);
 		}
 
 		kbElement = kbElement.concat([lineDiv]);
@@ -22,8 +22,8 @@ function drawKeyboard(parent) {
 	kbElement[3][1]["id"] = "keyboard-row-mid";
 	kbElement[4][1]["id"] = "keyboard-row-bot";
 
-	append(kbElement[4], ["div", {"class":"keyboard-key", "id":"key-del", "onclick":"keyboardDelCallback();"}, "‹DEL"]); //⌫
-	kbElement[4].splice(2, 0, ["div", {"class":"keyboard-key", "id":"key-enter", "onclick":"keyboardEnterCallback();"}, "ENTER›"]); //↵
+	append(kbElement[4], ["div", {"class":"keyboard-key", "id":"key-del", "onclick":"keyboardDelCallback();"}, ["span", {"class":"symbol"}, "‹DEL"]]); //⌫
+	kbElement[4].splice(2, 0, ["div", {"class":"keyboard-key", "id":"key-enter", "onclick":"keyboardEnterCallback();"}, ["span", {"class":"symbol"}, "ENTER›"]]); //↵
 
 	Xnew(kbElement, parent);
 }

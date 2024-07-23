@@ -1,0 +1,89 @@
+@font-face {
+    font-family: "Victor";
+    src: url("fonts/fixed/VictorMono-VariableFont_wght.ttf");
+}
+
+html {
+    overflow: hidden;
+}
+
+#game-panel {
+    font-family: Victor, fixed;
+}
+
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+#keyboard {
+    align-self: center;
+    flex-shrink: 0;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}
+#key-enter {
+	padding-inline: 0.46em;
+}
+
+#game-panel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;    
+    justify-content: space-between;
+    align-items: center;
+}
+#game-board {
+    width: 100%;
+    max-height: calc(100% - 9em);
+    max-width: 18em;
+    padding: 1em 1em 0 1em;
+    flex-shrink: 1;
+}
+#game-guess {
+    text-align: center;
+    font-size: 1.5em;
+    height: 1.4em;
+    border-bottom: solid;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}
+#game-answers {
+    overflow-y: scroll;
+    scrollbar-width: none;
+    max-height: 100%;
+    padding: 0.5em;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    font-size: 0.9em;
+    font-weight: 100;
+}
+#game-answers::-webkit-scrollbar {
+    display:none;
+}
+.score, .run {
+    text-align: end;
+}
+.run {
+	overflow: hidden;
+}
+#game-panel.win span {
+    color: var(--ac-color);
+}
+#game-panel.win span:nth-last-child(-n+3) {
+    color: var(--pop-ac-color);
+}
+
+#win-layer {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    z-index: 3;
+    width: var(--side-width);
+    border-block: medium solid var(--pop-ac-color);
+    margin-block: 2em;
+    color: var(--pop-ac-color);
+    text-align: center;
+    contain: content;
+    transition: visibility var(--fade-delay), opacity var(--fade-delay);
+}

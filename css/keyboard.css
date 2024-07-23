@@ -16,15 +16,18 @@
     background-color: #1114;
     cursor: pointer;
 }
-.keyboard-key:hover {
+.keyboard-key:hover, .keyboard-key.fixed:hover {
     border-color: var(--pop-ac-color);
     background-color: #fe81;
 }
-.keyboard-key.absent {
+.keyboard-key.absent .symbol {
     filter: brightness(60%) blur(0.03em);
 }
-.keyboard-key.absent:hover {
+.keyboard-key.absent:hover .symbol {
     filter: brightness(60%);
+}
+.keyboard-key.fixed {
+    border-bottom-color: var(--ac-color);
 }
 #key-del, #key-enter {
     font-size: 0.5em;

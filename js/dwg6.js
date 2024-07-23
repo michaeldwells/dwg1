@@ -1,9 +1,11 @@
+const minAnswer = 7;
+const maxAnswer = 12;
+const maxGuess = 15;
+
 const query_string = window.location.search.substring(1);
 const load_time = new Date(Date.now());
 seedPrng(hash(load_time.getUTCDate().toString() + load_time.getUTCMonth().toString() + load_time.getUTCFullYear().toString()));
 
-const maxGuess = 15;
-const maxAnswer = 6;
 var solution = getPuzzleWord();
 LOGS(solution);
 //Xid("win-answer").innerHTML = solution;
@@ -12,12 +14,48 @@ function getPuzzleWord() {
 	let word = "";
 
 	if (query_string === "random") {
-		while (word.length < 3 || word.length > maxAnswer) word = opt(common);
+		while (word.length < minAnswer || word.length > maxAnswer) word = opt(common);
 	} else {
-		while (word.length < 3 || word.length > maxAnswer) word = popt(common);
+		while (word.length < minAnswer || word.length > maxAnswer) word = popt(common);
 	}
 
 	return word;
+}
+
+function longestRun(guess, answer) {
+	let longRun = 0;
+	let thisRun = 0;
+	let thisRunMatched = false;
+	let equalAndOpposite = false;
+
+	for (l of guess) {
+		let matched = false;
+
+		for (l1 of answer) {
+			if (l === l1) {
+				matched = true;
+				break;
+			}
+		}
+
+		if (matched === thisRunMatched) {
+			thisRun += (matched ? 1 : -1);
+		} else {
+			thisRunMatched = matched;
+			thisRun = (matched ? 1 : -1);
+		}
+
+		if (thisRun == -longRun) {
+			equalAndOpposite = true;
+		}
+
+		if (M.abs(thisRun) > M.abs(longRun)) {
+			longRun = thisRun;
+			equalAndOpposite = false;
+		}
+	}
+
+	return {run: longRun, equal: equalAndOpposite};
 }
 
 function scoreGuess(guess, answer) {
@@ -66,18 +104,23 @@ function scoreGuess(guess, answer) {
 	if (score > 0 && score < 1) score = 1;
 	if (score > 99 && score < 100) score = 99;
 
-	if (score === 100) {
-		Xid("win-layer").classList.remove("hide");
-		Xid("game-panel").classList.add("win");
-		Xid("keyboard").classList.add("hide");
-		Xid("game-guess").classList.add("hide");
-	}
-
 	return score;
 }
 
-function logScore(guess, score) {
-	Xnew(["div",{"class":"game-score-line"},["span",guess],["span",{"class":"score"},M.round(score).toString()+"%"]], "#game-answers");
+function logScore(guess, score, run, equal) {
+	let scoreString = M.round(score).toString() + "%";
+	let runSymbol = "=";
+	if (!equal) runSymbol = M.sign(run) > 0 ? "+" : "-";
+	let runString = runSymbol.repeat(M.abs(run));
+
+	if (M.abs(run) > 5) runString = runSymbol + M.abs(run);
+//	if (M.abs(run) == 1) runString = "=";
+	if (guess.length + run == 0) runString = "";
+	if (guess.length == run) runString = "*".repeat(M.min(5, run));
+
+	Xnew(["span", guess], "#game-answers");
+	Xnew(["span", {"class":"score"}, scoreString], "#game-answers");
+	Xnew(["span", {"class":"run"}, runString], "#game-answers");
 	Xid("game-answers").scrollTo(0, Xid("game-answers").scrollHeight);
 }
 
@@ -86,6 +129,7 @@ function keyboardCallback(letter) {
 
 	Xid("game-guess").innerHTML += letter.toUpperCase();
 }
+
 function keyboardDelCallback() {
 	let guess = Xid("game-guess").innerHTML;
 
@@ -93,6 +137,7 @@ function keyboardDelCallback() {
 	
 	Xid("game-guess").innerHTML = guess.substring(0, guess.length - 1);
 }
+
 function keyboardEnterCallback() {
 	let guess = Xid("game-guess").innerHTML.toUpperCase();
 
@@ -105,8 +150,10 @@ function keyboardEnterCallback() {
 	if (i_c < 0 && !i_r && !i_e) return;
 
 	let score = scoreGuess(guess, solution);
+	let {run, equal} = longestRun(guess, solution);
 
-	logScore(guess, score);
+	logScore(guess, score, run, equal);
+
 	if (score == 0) {
 		for (l of guess) {
 			let id = "key-" + l.toLowerCase();
@@ -114,7 +161,19 @@ function keyboardEnterCallback() {
 		}
 	}
 
-	//Xid("win-guess-line").innerHTML = "You solved it in " + Xcs("game-score-line").length + " guesses."
+	if (run === guess.length) {
+		for (l of guess) {
+			let id = "key-" + l.toLowerCase();
+			Xid(id).classList.add("fixed");
+		}
+	}
+
+	if (score === 100) {
+		Xid("win-layer").classList.remove("hide");
+		Xid("game-panel").classList.add("win");
+		Xid("keyboard").classList.add("hide");
+		Xid("game-guess").classList.add("hide");
+	}
 
 	if (score < 100) Xid("game-guess").innerHTML = "";
 }

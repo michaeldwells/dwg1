@@ -1,5 +1,8 @@
 .keyboard {
     width: 18em;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .keyboard-row {
     display: flex;

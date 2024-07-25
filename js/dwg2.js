@@ -1,16 +1,26 @@
+const load_time = new Date(Date.now());
+const load_day = load_time.getUTCDate().toString();
+const load_month = load_time.getUTCMonth().toString();
+const load_year = load_time.getUTCFullYear().toString();
+const daily_seed = hash(load_day + load_month + load_year);
+var seed = daily_seed;
+seedPrng(daily_seed);
+
 const query_string = window.location.search.substring(1);
 const query_bool = query_string.length > 0;
 const query_number = Number(query_string);
-const load_time = new Date(Date.now());
-seedPrng(hash(load_time.getUTCDate().toString() + load_time.getUTCMonth().toString() + load_time.getUTCFullYear().toString()));
+
 if (query_bool) {
 	LOG(query_string);
+	if (query_string === "random")
+		window.location.replace("?"+hash(Date.now().toString()));
 	if (query_number > 0) {
 		seedPrng(query_number);
-	} else {
-		seedPrng();
+		seed = query_number;
 	}
 }
+
+Xid("share").href = "?" + seed.toString();
 
 const range_selection = range(100).map(x=>range(x));
 
@@ -292,7 +302,11 @@ function submitGuess() {
 	let gParts = guess.map(x => tiles[x].reduce(sum));
 	let gWord = gParts.reduce(sum);
 	let aWord = word.reduce(sum);
-	if (word_trie.contains(gWord) || ((typeof dictionaryEpic !== "undefined") && (binarySearch(epic,gWord) >= 0))) {
+
+	let found = word_trie.contains(gWord);
+	found = found || (typeof rare !== "undefined") && (binarySearch(rare,gWord) >= 0);
+	found = found || (typeof epic !== "undefined") && (binarySearch(epic,gWord) >= 0);
+	if (found) {
 		expandTilesGroups(guess, word);
 		guesses.push(gParts);
 		guess = [];
@@ -301,7 +315,6 @@ function submitGuess() {
 		updateTiles(tiles);
 		if (gWord.length >= aWord.length) {
 			Xid("finalword").innerHTML = gWord;
-			//$.id("finalscore").innerHTML = "Score: "+score;
 			Xid("scorelayer").classList.remove("hide");
 		}
 	}
@@ -321,57 +334,6 @@ function clickTile(i) {
 	}
 	drawGuess(guess, tiles);
 	updateTiles(tiles);
-}
-
-function stopProp(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-}
-function hideHelpLayer(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-	Xid('help-layer').classList.add('hidelayer');
-	Xid('helpbutton').classList.remove('hidelayer');
-}
-function toggleHelpLayer(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-	Xid('help-layer').classList.toggle('hidelayer');
-	Xid('helpbutton').classList.toggle('hidelayer');
-}
-
-function toggleHelpPageLeft() {
-	let pages = Array.from(Xcs("leftpage"));
-	let activePage = 0;
-	let maxPage = pages.length;
-	for (p of pages.keys()) {
-		if (pages[p].classList.contains('showpage'+(p+1).toString())) {
-			activePage = M.max(p,1);
-		}
-	}
-	for (page of pages) {
-		for (p of pages.keys()) {
-			page.classList.remove('showpage'+(p+1).toString());
-		}
-		page.classList.add('showpage'+(activePage).toString());
-	}
-	if (activePage <= 1) Xid('sidemaskl').classList.remove('active');
-	if (activePage < maxPage) Xid('sidemaskr').classList.add('active');
-}
-function toggleHelpPageRight() {
-	let pages = Array.from(Xcs("leftpage"));
-	let activePage = 0;
-	let maxPage = pages.length;
-	for (p of pages.keys()) {
-		if (pages[p].classList.contains('showpage'+(p+1).toString())) {
-			activePage = M.min(p+2,maxPage);
-		}
-	}
-	for (page of pages) {
-		for (p of pages.keys()) {
-			page.classList.remove('showpage'+(p+1).toString());
-		}
-		page.classList.add('showpage'+(activePage).toString());
-	}
-	if (activePage > 1) Xid('sidemaskl').classList.add('active');
-	if (activePage >= maxPage) Xid('sidemaskr').classList.remove('active');
 }
 
 var base_word = "";
@@ -415,15 +377,4 @@ LOGS(tiles);
 
 drawTiles(tiles);
 
-
-//$.id("scorelayer").setAttribute("onClick", "answers.hideScore()");
-Xq("body").addEventListener("click", hideHelpLayer);
-//$.id("helpbutton").setAttribute("onClick", "toggleHelpLayer();");
-Xid("helpbutton").addEventListener("click", toggleHelpLayer);
-Xid("help-layer").addEventListener("click", stopProp);
-Xid("leftclosebutton").addEventListener("click", toggleHelpLayer);
-Xid("leftclosebutton").addEventListener("click", toggleHelpLayer);
-Xid("sidemaskl").addEventListener("click", toggleHelpPageLeft);
-Xid("sidemaskr").addEventListener("click", toggleHelpPageRight);
-Xc("middle").classList.remove("hidelayer");
-setTimeout(()=>Xid("helpbutton").classList.remove("hidelayer"), 200);
+Xc("middle").classList.remove("hide");

@@ -1,18 +1,28 @@
+const load_time = new Date(Date.now());
+const load_day = load_time.getUTCDate().toString();
+const load_month = load_time.getUTCMonth().toString();
+const load_year = load_time.getUTCFullYear().toString();
+const daily_seed = hash(load_day + load_month + load_year);
+var seed = daily_seed;
+seedPrng(daily_seed);
+
 const query_string = window.location.search.substring(1);
 const query_bool = query_string.length > 0;
 const query_number = Number(query_string);
-const load_time = new Date(Date.now());
-seedPrng(hash(load_time.getUTCDate().toString() + load_time.getUTCMonth().toString() + load_time.getUTCFullYear().toString()));
+
 if (query_bool) {
 	LOG(query_string);
+	if (query_string === "random")
+		window.location.replace("?"+hash(Date.now().toString()));
 	if (query_number > 0) {
 		seedPrng(query_number);
-	} else {
-		seedPrng();
+		seed = query_number;
 	}
 }
 
-const ranges100 = range(100).map(x=>range(x));
+Xid("share").href = "?" + seed.toString();
+
+
 const revA = x => Array.from(x).map((x,i,a)=>a.at(-1-i));
 const reverse = x => Array.from(x).map((x,i,a)=>a.at(-1-i)).reduce(sum,"");
 
@@ -160,7 +170,7 @@ let used_tris = new Set([...rows, ...cols, ...tiles].map(x=>[x,reverse(x)]).flat
 while (tiles.length < tile_count) {
 	let next_word = popt(c6);
 	let off_tris = [0,1,2,3].map(n=>[...next_word.slice(0,n), ...next_word.slice(n+3,6)].reduce(sum));
-	shuffle(off_tris);
+	pshuffle(off_tris);
 	let nex_tri;
 	do {
 		next_tri = off_tris.pop();
@@ -185,11 +195,11 @@ Xid("inner-bot-left").innerHTML   = rows[2][0];
 Xid("inner-bot-center").innerHTML = rows[2][1];
 Xid("inner-bot-right").innerHTML  = rows[2][2];
 
-shuffle(tiles);
+pshuffle(tiles);
 tiles.forEach((x,i)=>Xnew(["div",{"id":"tile"+i,"class":"tile","onClick":"clickTile("+i+");"}, ...Array.from(x).map(y=>["div",{"class":"letter"},y])],"#tiles"));
 
 let tilePlacement = tiles.map(x=>[-1,-1]);
-let spaces = ranges100[12].map(x=>[-1,-1]);
+let spaces = range(12).map(x=>[-1,-1]);
 const spacePairs = [8,7,6,11,10,9,2,1,0,5,4,3];
 const backSpaces = [false,false,false,true,true,true,true,true,true,false,false,false];
 const mids = [...cols, ...rows, ...revA(cols), ...revA(rows)];
@@ -353,66 +363,4 @@ function checkSuccess() {
 	})
 }
 
-function stopProp(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-}
-function hideHelpLayer(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-	Xid('help-layer').classList.add('hide-layer');
-	Xid('help-button').classList.remove('hide-layer');
-}
-function toggleHelpLayer(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-	Xid('help-layer').classList.toggle('hide-layer');
-	Xid('help-button').classList.toggle('hide-layer');
-}
-
-function toggleHelpPageLeft() {
-	let pages = Array.from($.class('left-page'));
-	let activePage = 0;
-	let maxPage = pages.length;
-	for (p of pages.keys()) {
-		if (pages[p].classList.contains('show-page-'+(p+1).toString())) {
-			activePage = M.max(p,1);
-		}
-	}
-	for (page of pages) {
-		for (p of pages.keys()) {
-			page.classList.remove('show-page-'+(p+1).toString());
-		}
-		page.classList.add('show-page-'+(activePage).toString());
-	}
-	if (activePage <= 1) Xid('side-mask-l').classList.remove('active');
-	if (activePage < maxPage) Xid('side-mask-r').classList.add('active');
-}
-function toggleHelpPageRight() {
-	let pages = Array.from($.class('left-page'));
-	let activePage = 0;
-	let maxPage = pages.length;
-	for (p of pages.keys()) {
-		if (pages[p].classList.contains('show-page-'+(p+1).toString())) {
-			activePage = M.min(p+2,maxPage);
-		}
-	}
-	for (page of pages) {
-		for (p of pages.keys()) {
-			page.classList.remove('show-page-'+(p+1).toString());
-		}
-		page.classList.add('show-page-'+(activePage).toString());
-	}
-	if (activePage > 1) Xid('side-mask-l').classList.add('active');
-	if (activePage >= maxPage) Xid('side-mask-r').classList.remove('active');
-}
-
-//drawTiles(tiles);
-
-
-X.body.addEventListener("click", hideHelpLayer);
-Xid("help-button").addEventListener("click", toggleHelpLayer);
-Xid("help-layer").addEventListener("click", stopProp);
-Xid("help-close-button").addEventListener("click", toggleHelpLayer);
-Xid("help-close-button").addEventListener("click", toggleHelpLayer);
-Xid("side-mask-l").addEventListener("click", toggleHelpPageLeft);
-Xid("side-mask-r").addEventListener("click", toggleHelpPageRight);
-Xid("game-panel").classList.remove("hide-layer");
-setTimeout(()=>Xid("help-button").classList.remove("hide-layer"), 200);
+Xid("game-panel").classList.remove("hide");

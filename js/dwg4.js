@@ -1,19 +1,29 @@
-//seedPrng("Hello!");
 const cookieName = "dwg4data";
+
+const load_time = new Date(Date.now());
+const load_day = load_time.getUTCDate().toString();
+const load_month = load_time.getUTCMonth().toString();
+const load_year = load_time.getUTCFullYear().toString();
+//const daily_seed = hash(load_day + load_month + load_year);
+const daily_seed = hash(load_year + load_month + load_day); // So it isn't the same puzzle as game three.
+var seed = daily_seed;
+seedPrng(daily_seed);
 
 const query_string = window.location.search.substring(1);
 const query_bool = query_string.length > 0;
 const query_number = Number(query_string);
-const load_time = new Date(Date.now());
-seedPrng(hash(load_time.getUTCDate().toString() + load_time.getUTCMonth().toString() + load_time.getUTCFullYear().toString()));
+
 if (query_bool) {
 	LOG(query_string);
+	if (query_string === "random")
+		window.location.replace("?"+hash(Date.now().toString()));
 	if (query_number > 0) {
 		seedPrng(query_number);
-	} else {
-		seedPrng();
+		seed = query_number;
 	}
 }
+
+Xid("share").href = "?" + seed.toString();
 
 function checkCookie() {
 	const cookieString = document.cookie;
@@ -434,58 +444,6 @@ function checkSuccess() {
 	})
 }
 
-function stopProp(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-}
-function hideHelpLayer(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-	Xid('help-layer').classList.add('hide-layer');
-	Xid('help-button').classList.remove('hide-layer');
-}
-function toggleHelpLayer(e) {
-	if (typeof e !== "undefined") e?.stopPropagation();
-	Xid('help-layer').classList.toggle('hide-layer');
-	Xid('help-button').classList.toggle('hide-layer');
-}
-
-function toggleHelpPageLeft() {
-	let pages = Array.from($.class('left-page'));
-	let activePage = 0;
-	let maxPage = pages.length;
-	for (p of pages.keys()) {
-		if (pages[p].classList.contains('show-page-'+(p+1).toString())) {
-			activePage = M.max(p,1);
-		}
-	}
-	for (page of pages) {
-		for (p of pages.keys()) {
-			page.classList.remove('show-page-'+(p+1).toString());
-		}
-		page.classList.add('show-page-'+(activePage).toString());
-	}
-	if (activePage <= 1) Xid('side-mask-l').classList.remove('active');
-	if (activePage < maxPage) Xid('side-mask-r').classList.add('active');
-}
-function toggleHelpPageRight() {
-	let pages = Array.from($.class('left-page'));
-	let activePage = 0;
-	let maxPage = pages.length;
-	for (p of pages.keys()) {
-		if (pages[p].classList.contains('show-page-'+(p+1).toString())) {
-			activePage = M.min(p+2,maxPage);
-		}
-	}
-	for (page of pages) {
-		for (p of pages.keys()) {
-			page.classList.remove('show-page-'+(p+1).toString());
-		}
-		page.classList.add('show-page-'+(activePage).toString());
-	}
-	if (activePage > 1) Xid('side-mask-l').classList.add('active');
-	if (activePage >= maxPage) Xid('side-mask-r').classList.remove('active');
-}
-
-//drawTiles(tiles);
 checkCookie();
 
 Xid("inner-bot-center").addEventListener("click", pushUp);
@@ -493,12 +451,4 @@ Xid("inner-top-center").addEventListener("click", pushDown);
 Xid("inner-mid-right").addEventListener("click", pushLeft);
 Xid("inner-mid-left").addEventListener("click", pushRight);
 
-X.body.addEventListener("click", hideHelpLayer);
-Xid("help-button").addEventListener("click", toggleHelpLayer);
-Xid("help-layer").addEventListener("click", stopProp);
-Xid("help-close-button").addEventListener("click", toggleHelpLayer);
-Xid("help-close-button").addEventListener("click", toggleHelpLayer);
-Xid("side-mask-l").addEventListener("click", toggleHelpPageLeft);
-Xid("side-mask-r").addEventListener("click", toggleHelpPageRight);
-Xid("game-panel").classList.remove("hide-layer");
-setTimeout(()=>Xid("help-button").classList.remove("hide-layer"), 200);
+Xid("game-panel").classList.remove("hide");

@@ -2,6 +2,10 @@
 /* HELP SECTION                                                              */
 /*****************************************************************************/
 
+:root {
+    --help-width: min(95%, 48rem);
+}
+
 /*-Help Button---------------------------------------------------------------*/
 #help-button {
     display: block;
@@ -19,18 +23,19 @@
 #help-button::after {
     content: "+";
 }
-div.hide-layer {
-    visibility: hidden;
-    opacity: 0;
+@media (max-width: 400px) {
+	div#helpbutton {
+		padding: 1rem 0 1rem 1rem;
+	}
 }
-  
+
 /*-Help Screen---------------------------------------------------------------*/
 #help-layer {
     position: absolute;
     display: block;
     contain: content;
     z-index: 3;
-    width: var(--side-width);
+    width: var(--help-width);
     height: 24em;
     padding-block: 1em;
     border: var(--line-thin) solid var(--pop-ac-color);

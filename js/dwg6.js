@@ -22,6 +22,22 @@ function getPuzzleWord() {
 	return word;
 }
 
+function getSubStrings(w) {
+	return range(w.length).map( (l) => range(w.length - (l+1) + 1).map( (i) => w.slice(i, i + (l+1)) ) ).flat();
+}
+
+function longestSharedSubstring(word1, word2) {
+	let subs1 = new Set(getSubStrings(word1));
+	let subs2 = new Set(getSubStrings(word2));
+
+	let l = 0;
+	for (const s of subs1.intersection(subs2)) {
+		if (s.length > l) l = s.length;
+	}
+
+	return l;
+}
+
 function longestRun(guess, answer) {
 	let longRun = 0;
 	let thisRun = 0;
@@ -109,14 +125,17 @@ function scoreGuess(guess, answer) {
 
 function logScore(guess, score, run, equal) {
 	let scoreString = M.round(score).toString() + "%";
+
 	let runSymbol = "=";
 	if (!equal) runSymbol = M.sign(run) > 0 ? "+" : "-";
-	let runString = runSymbol.repeat(M.abs(run));
+	if (guess.length == run) runSymbol = "*"
 
-	if (M.abs(run) > 5) runString = runSymbol + M.abs(run);
-//	if (M.abs(run) == 1) runString = "=";
-	if (guess.length + run == 0) runString = "";
-	if (guess.length == run) runString = "*".repeat(M.min(5, run));
+	let runLength = M.abs(run);
+	if (guess.length == run) runLength = longestSharedSubstring(guess, solution);
+	if (guess.length + run == 0) runLength = 0;
+
+	let runString = runSymbol.repeat(runLength);
+	if (runLength > 5) runString = runSymbol + runLength.toString();
 
 	Xnew(["span", guess], "#game-answers");
 	Xnew(["span", {"class":"score"}, scoreString], "#game-answers");
@@ -143,11 +162,11 @@ function keyboardEnterCallback() {
 
 	if (guess.length < 3) return;
 
-	let i_c = binarySearch(common, guess);
-	let i_r = ((typeof rare !== "undefined") && (binarySearch(rare, guess) >= 0));
-	let i_e = ((typeof epic !== "undefined") && (binarySearch(epic, guess) >= 0));
+	let found = binarySearch(common, guess) >= 0;
+	found = found || ((typeof rare !== "undefined") && (binarySearch(rare, guess) >= 0));
+	found = found || ((typeof epic !== "undefined") && (binarySearch(epic, guess) >= 0));
 
-	if (i_c < 0 && !i_r && !i_e) return;
+	if (!found) return;
 
 	let score = scoreGuess(guess, solution);
 	let {run, equal} = longestRun(guess, solution);

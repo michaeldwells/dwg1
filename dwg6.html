@@ -19,17 +19,15 @@
 	<div id="help-page-1" class="help-page show-page-1">
 		<h1>+ How to Play +</h1>
 		<p>
-You are trying to guess a word of between seven and twelve letters. Your 
-guesses will be given a percentage score based on how close they are to 
-the answer.
+You are trying to guess a word of seven to twelve letters. Your 
+guesses will be given a percentage score and a symbol.
 		</p>
-		<p>
-You will also be given an indication of the longest run of correct(+) or 
-incorrect(-) letters in your guess. If all your letters are correct(*) 
-those letters will be underlined on the keyboard. If all your letters are 
-wrong, those letters will be grayed out. An equals sign (=) indicates 
-the longest right and wrong runs are the same length.
-		</p>
+		<table>
+			<tr><td>---</td><td>There is a run of 3 letters in the guess that are not in the answer, and no run of shared letters that is as long as this.</td></tr>
+			<tr><td>-7</td><td>There is a run of 7 letters in the guess that are not in the answer, and no run of shared letters that is as long as this.</td></tr>
+			<tr><td>++++</td><td>There is a run of 4 letters in the guess that are also in the answer, and no run of different letters that is as long as this.</td></tr>
+			<tr><td>**</td><td>All letters in the guess are also in the answer. The longest sequence in the guess that is also in the answer is 2 letters long.</td></tr>
+		</table>
 	</div>
 
 	<div id="help-page-2" class="help-page show-page-1">

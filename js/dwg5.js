@@ -1,14 +1,69 @@
-const query_string = window.location.search.substring(1);
-const load_time = new Date(Date.now());
-seedPrng(hash(load_time.getUTCDate().toString() + load_time.getUTCMonth().toString() + load_time.getUTCFullYear().toString()));
-
 const maxGuess = 15;
 const maxAnswer = 6;
+
+const daily_seed = getDailySeed();
+seedPrng(daily_seed);
+
+const cookieName = "dwg5data";
+
 var solution = getPuzzleWord();
 LOGS(solution);
-//Xid("win-answer").innerHTML = solution;
+
+var guesses = [];
+
+checkCookie();
+
+function getDailySeed() {
+	const query_string = window.location.search.substring(1);
+	const query_number = parseInt(query_string);
+		
+	if (!isNaN(query_number)) return query_number;
+
+	if (query_string === "random") return hash(Date.now().toString());
+
+	const load_time = new Date(Date.now());
+
+	const load_day = load_time.getUTCDate().toString();
+	const load_month = load_time.getUTCMonth().toString();
+	const load_year = load_time.getUTCFullYear().toString();
+
+	return hash(load_day + load_month + load_year);
+}
+
+function checkCookie() {
+	const cookieString = document.cookie;
+
+	if (cookieString.length == 0) return;
+
+	const cookieValue = 
+		cookieString.
+		split(";").
+		map(x => x.trim()).
+		find((row) => row.startsWith(cookieName + "="))?.
+		split("=")[1];
+
+	if (!cookieValue) return;
+
+	const data = JSON.parse(cookieValue);
+
+	if (data["seed"] === prng_seed) {
+		solution = data["solution"];
+		guesses = data["guesses"];
+		for (g in guesses) logScore(...g);
+	}
+}
+
+function updateCookie() {
+	const data = {
+		"seed": prng_seed,
+		"solution": solution,
+		"guesses": guesses
+	};
+	document.cookie = cookieName + "=" + JSON.stringify(data) + "; max-age=" + String(60*60*24) + "; SameSite=Lax;";
+}
 
 function getPuzzleWord() {
+	const query_string = window.location.search.substring(1);
 	let word = "";
 
 	if (query_string === "random") {
@@ -66,12 +121,9 @@ function scoreGuess(guess, answer) {
 	if (score > 0 && score < 1) score = 1;
 	if (score > 99 && score < 100) score = 99;
 
-	if (score === 100) {
-		Xid("win-layer").classList.remove("hide");
-		Xid("game-panel").classList.add("win");
-		Xid("keyboard").classList.add("hide");
-		Xid("game-guess").classList.add("hide");
-	}
+	append(guesses, [guess, score]);
+
+	updateCookie();
 
 	return score;
 }
@@ -79,6 +131,20 @@ function scoreGuess(guess, answer) {
 function logScore(guess, score) {
 	Xnew(["div",{"class":"game-score-line"},["span",guess],["span",{"class":"score"},M.round(score).toString()+"%"]], "#game-answers");
 	Xid("game-answers").scrollTo(0, Xid("game-answers").scrollHeight);
+
+	if (score == 0) {
+		for (l of guess) {
+			let id = "key-" + l.toLowerCase();
+			Xid(id).classList.add("absent");
+		}
+	}
+	
+	if (score === 100) {
+		Xid("win-layer").classList.remove("hide");
+		Xid("game-panel").classList.add("win");
+		Xid("keyboard").classList.add("hide");
+		Xid("game-guess").classList.add("hide");
+	}
 }
 
 function keyboardCallback(letter) {
@@ -107,14 +173,6 @@ function keyboardEnterCallback() {
 	let score = scoreGuess(guess, solution);
 
 	logScore(guess, score);
-	if (score == 0) {
-		for (l of guess) {
-			let id = "key-" + l.toLowerCase();
-			Xid(id).classList.add("absent");
-		}
-	}
-
-	//Xid("win-guess-line").innerHTML = "You solved it in " + Xcs("game-score-line").length + " guesses."
 
 	if (score < 100) Xid("game-guess").innerHTML = "";
 }

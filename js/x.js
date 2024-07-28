@@ -55,9 +55,11 @@ function hash(s) {return cyrb128(s)[0]}
   //---------------------------------------------------------------------------
 
     // Pseudo-random number generator with 128-bit seed.
-function sfc32(a, b, c, d) {return function() {a>>>=0;b>>>=0;c>>>=0;d>>>=0;var t=(a+b)|0;a=b^b>>>9;b=c+(c<<3)|0;c=(c<<21|c>>>11);d=d+1|0;t=t+d|0;c=c+t|0;return (t>>>0)/4294967296;}}
+function sfc32(a, b, c, d) {return function() {a>>>=0;b>>>=0;c>>>=0;d>>>=0;var t=(a+b)|0;
+	a=b^b>>>9;b=c+(c<<3)|0;c=(c<<21|c>>>11);d=d+1|0;t=t+d|0;c=c+t|0;return (t>>>0)/4294967296;}}
     // Pseudo-random number generator with 32-bit seed.
-function mulberry32(a) {return function() {var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;}}
+function mulberry32(a) {return function() {var t=a+=0x6D2B79F5;
+	t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;}}
 
 function prgn_generator(a) {return mulberry32(a)}
 
@@ -133,12 +135,13 @@ function allCombinations(l) {
 function subsets(l) {
 	if (l.length == 0) return [];
 	if (l.length == 1) return [[l[0]]];
-	return range(l.length).map(n => [[l[n]], ...subsets(l.slice(n+1)).map(x => [l[n], ...x])]).reduce((a,v) => [...a, ...v]);
+	return range(l.length).
+		map(n => [
+			[l[n]], 
+			...subsets(l.slice(n+1)).map(x => [l[n], ...x])
+		]).
+		reduce((a,v) => [...a, ...v]);
 }
-function set_union(a,b) {return new Set([...a, ...b]);}
-function set_int(a,b) {return new Set([...a].filter((x) => b.has(x)));}
-function set_diff(a,b) {return new Set([...a].filter((x) => !b.has(x)));}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Misc. Math                                                                //

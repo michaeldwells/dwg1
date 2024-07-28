@@ -47,7 +47,7 @@ function checkCookie() {
 	if (data["seed"] === prng_seed) {
 		solution = data["solution"];
 		guesses = data["guesses"];
-		for (g in guesses) logScore(...g);
+		for (g of guesses) logScore(...g);
 	}
 }
 

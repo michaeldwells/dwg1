@@ -11,8 +11,6 @@ LOGS(solution);
 
 var guesses = [];
 
-checkCookie();
-
 function getDailySeed() {
 	const query_string = window.location.search.substring(1);
 	const query_number = parseInt(query_string);
@@ -187,3 +185,5 @@ function drawGameBoard(parent) {
 
 drawGameBoard(Xid("game-panel"));
 drawKeyboard(Xid("game-panel"));
+
+checkCookie();

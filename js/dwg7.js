@@ -114,7 +114,7 @@ function getPuzzleWord() {
 
 		const matches = other_tris.map(x => [x, tridata["rare"][x]]);
 		LOG(matches);
-		const shared_matches = matches.map(x => [x[0], x[1].filter((y) => y.includes(t1)).filter(y => similars.reduce((acc,i) => acc && !y.includes(i), true))]);
+		const shared_matches = matches.map(x => [x[0], x[1].filter((y) => y.includes(t1)).filter(y => similars.reduce((acc,i) => acc && y!==i, true))]);
 		LOG(shared_matches);
 
 		solos = shared_matches.filter(x => x[1].length == 0).map(x => x[0]);

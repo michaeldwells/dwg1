@@ -152,6 +152,7 @@ function hex(x) {return parseInt(x,16);}
 
 const sum = (a,b) => a+b;
 const len = (x) => x.length;
+const trim = (x) => x.trim();
 
 function range(size, startAt = 0) {return [...Array(size).keys()].map(i => i + startAt);}
 
@@ -326,6 +327,29 @@ class Trie {
 ///////////////////////////////////////////////////////////////////////////////
 // DOM                                                                       //
 ///////////////////////////////////////////////////////////////////////////////
+
+function getJSONCookieData(cookieName) {
+	const cookieString = document.cookie;
+
+	if (cookieString.length == 0) return false;
+
+	const cookieValue = 
+		cookieString.
+		split(";").
+		map(trim).
+		find((row) => row.startsWith(cookieName + "="))?.
+		split("=")[1];
+
+	if (!cookieValue) return false;
+
+	const data = JSON.parse(cookieValue);
+
+	return data;
+}
+
+function setJSONCookie(cookieName, data) {
+	document.cookie = cookieName + "=" + JSON.stringify(data) + "; max-age=" + String(60*60*24) + "; SameSite=Lax;";
+}
 
 var X = document;
 

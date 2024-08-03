@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+	<title>Disappointing Word Game Number Six</title>
+	<link rel="icon" type="image/png" href="media/dwg7.png">
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<link rel="stylesheet" type="text/css" href="css/help.css" />
+	<link rel="stylesheet" type="text/css" href="css/keyboard.css" />
+	<link rel="stylesheet" type="text/css" href="css/dwg7.css" />
+</head>
+
+<body>
+<div id="help-button" class="hide"></div>
+<div id="help-layer" class="hide">
+	<div id="help-close-button" class="close-button"></div>
+	<div id="help-page-1" class="help-page show-page-1">
+		<h1>+ How to Play +</h1>
+		<p>
+You are given two blocks of three letters. Try to find a word that contains 
+both blocks.
+		</p>
+		<p> 
+The blocks may be in any order. They may not overlap. They may (or may not) 
+have letters before, between, and/or after them.
+		</p>
+	</div>
+
+	<div id="help-page-2" class="help-page show-page-1">
+		<h1>+ Notes +</h1>
+	</div>
+	<div id="side-mask-l" class="side-mask-l"><p>‹</p></div>
+	<div id="side-mask-r" class="side-mask-r active"><p>›</p></div>
+</div>
+<div id="game-panel"></div>
+<div id="win-layer" class="hide">
+	<p><a href="?random">Try another puzzle</a></p>
+</div>
+
+<script src="js/x.js"></script>
+
+<script src="js/wordlists/scowl55.js"></script>
+<script src="js/wordlists/scowl80.js"></script>
+<script src="js/dwg7.js"></script>
+<script src="js/help.js"></script>
+</body>

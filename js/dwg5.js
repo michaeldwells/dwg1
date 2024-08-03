@@ -1,74 +1,55 @@
 const maxGuess = 15;
 const maxAnswer = 6;
 
-const daily_seed = getDailySeed();
+const load_time = new Date(Date.now());
+
+const daily_seed = getDailySeed(load_time);
 seedPrng(daily_seed);
 
-const cookieName = "dwg5data";
+const cookie_name = "dwg5data";
+checkCookie();
 
-var solution = getPuzzleWord();
+const solution = getPuzzleWord();
 LOGS(solution);
 
-var guesses = [];
+const guesses = [];
 
-function getDailySeed() {
-	const query_string = window.location.search.substring(1);
-	const query_number = parseInt(query_string);
-		
-	if (!isNaN(query_number)) return query_number;
+const cookie_data = {
+	"seed": daily_seed,
+	"solution": solution,
+	"guesses": guesses
+};
 
-	if (query_string === "random") return hash(Date.now().toString());
-
-	const load_time = new Date(Date.now());
-
+function getDailySeed(load_time) {
 	const load_day = load_time.getUTCDate().toString();
 	const load_month = load_time.getUTCMonth().toString();
 	const load_year = load_time.getUTCFullYear().toString();
+	const query_string = window.location.search.substring(1);
+	const query_number = parseInt(query_string);
+		
+	if (query_string === "random") 
+		window.location.replace("?"+hash(Date.now().toString()));
+
+	if (!isNaN(query_number)) return query_number;
 
 	return hash(load_day + load_month + load_year);
 }
 
-function checkCookie() {
-	const cookieString = document.cookie;
+function checkCookie(cookieName) {
+	const data = getJSONCookieData(cookieName);
 
-	if (cookieString.length == 0) return;
-
-	const cookieValue = 
-		cookieString.
-		split(";").
-		map(x => x.trim()).
-		find((row) => row.startsWith(cookieName + "="))?.
-		split("=")[1];
-
-	if (!cookieValue) return;
-
-	const data = JSON.parse(cookieValue);
-
-	if (data["seed"] === prng_seed) {
+	if (data && data["seed"] === prng_seed) {
 		solution = data["solution"];
 		guesses = data["guesses"];
 		for (g of guesses) logScore(...g);
 	}
 }
 
-function updateCookie() {
-	const data = {
-		"seed": prng_seed,
-		"solution": solution,
-		"guesses": guesses
-	};
-	document.cookie = cookieName + "=" + JSON.stringify(data) + "; max-age=" + String(60*60*24) + "; SameSite=Lax;";
-}
-
 function getPuzzleWord() {
 	const query_string = window.location.search.substring(1);
 	let word = "";
 
-	if (query_string === "random") {
-		while (word.length < 3 || word.length > maxAnswer) word = opt(common);
-	} else {
-		while (word.length < 3 || word.length > maxAnswer) word = popt(common);
-	}
+	while (word.length < 3 || word.length > maxAnswer) word = popt(common);
 
 	return word;
 }
@@ -121,7 +102,7 @@ function scoreGuess(guess, answer) {
 
 	append(guesses, [guess, score]);
 
-	updateCookie();
+	setJSONCookie(cookie_name, cookie_data);
 
 	return score;
 }

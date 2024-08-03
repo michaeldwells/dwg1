@@ -94,6 +94,7 @@ body.accessible {
 html body *.hide {
     visibility: hidden;
     opacity: 0;
+    height: 0;
 }
 
 body {

@@ -36,7 +36,7 @@ a {
 }
 #game-board {
     width: 100%;
-    max-height: calc(100% - 9em);
+    max-height: calc(100% - 9.5em);
     max-width: 18em;
     padding: 1em 1em 0 1em;
     flex-shrink: 1;
@@ -80,10 +80,13 @@ a {
     display: block;
     z-index: 3;
     width: var(--side-width);
-    border-block: medium solid var(--pop-ac-color);
+    border-block: thin solid var(--pop-ac-color);
     margin-block: 2em;
     color: var(--pop-ac-color);
     text-align: center;
+    letter-spacing: 0.2em;
+    font-family: Victor;
+    font-variant-caps: small-caps;
     contain: content;
     transition: visibility var(--fade-delay), opacity var(--fade-delay);
 }

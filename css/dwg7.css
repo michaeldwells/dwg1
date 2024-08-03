@@ -1,0 +1,83 @@
+@font-face {
+    font-family: "Cinzel";
+    src: url("fonts/Cinzel-VariableFont_wght.ttf");
+}
+
+html {
+    overflow: hidden;
+}
+
+#game-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.clue-string {
+    float: left;
+    width: 50%;
+    text-align: center;
+    font-weight: 100;
+}
+.clue-string.found {
+    font-weight: normal;
+    color: var(--pop-ac-color);
+}
+
+#game-guess-text {
+    width: 100%;
+    padding: 0.2em 0.4em;
+    border: thin solid var(--ac-color);
+    color: var(--fg-color);
+    background-color: var(--bg-color);
+    font-size: 1em;
+    font-family: Montserrat, sans-serif;
+    font-weight: 100;
+    text-align: center;
+    caret-color: var(--ac-color);
+    transition: border var(--fade-delay), color var(--fade-delay), font-weight var(--fade-delay);
+}
+#game-guess-text:focus {
+    outline: none !important;
+}
+.win #game-guess-text {
+    border: medium solid var(--pop-ac-color);
+    color: var(--pop-ac-color);
+    font-weight: normal;
+}
+
+#game-guess-button {
+    width: 1.4em;
+    background-color: #0000;
+    padding: 0;
+    border: none;
+    color: var(--ac-color);
+    font-family: Montserrat, sans-serif;
+    font-size: 2em;
+    font-weight: 100;
+    position: relative;
+    left: calc(100% - 1.25em);
+    top: -1.14em;
+    transition: opacity var(--fade-delay);
+}
+#game-guess-button:focus {
+    outline: none !important;
+}
+.win #game-guess-button {
+    opacity: 0;
+}
+
+#new-game-link {
+    color: var(--fg-color);
+    text-decoration: none;
+    font-weight: 100;
+    opacity: 0;
+    cursor: default;
+    transition: opacity var(--fade-delay) var(--fade-delay);
+}
+.win #new-game-link {
+    opacity: 0.6;
+    cursor: revert;
+}

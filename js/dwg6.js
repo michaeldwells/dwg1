@@ -2,22 +2,52 @@ const minAnswer = 7;
 const maxAnswer = 12;
 const maxGuess = 15;
 
-const query_string = window.location.search.substring(1);
 const load_time = new Date(Date.now());
-seedPrng(hash(load_time.getUTCDate().toString() + load_time.getUTCMonth().toString() + load_time.getUTCFullYear().toString()));
 
-var solution = getPuzzleWord();
+const daily_seed = getDailySeed(load_time);
+seedPrng(daily_seed);
+
+const solution = getPuzzleWord();
 LOGS(solution);
-//Xid("win-answer").innerHTML = solution;
+
+const guesses = [];
+
+const cookie_name = "dwg6data";
+const cookie_data = {
+	"seed": daily_seed,
+	"solution": solution,
+	"guesses": guesses
+};
+
+function getDailySeed(load_time) {
+	const load_day = load_time.getUTCDate().toString();
+	const load_month = load_time.getUTCMonth().toString();
+	const load_year = load_time.getUTCFullYear().toString();
+	const query_string = window.location.search.substring(1);
+	const query_number = parseInt(query_string);
+		
+	if (query_string === "random") 
+		window.location.replace("?"+hash(Date.now().toString()));
+
+	if (!isNaN(query_number)) return query_number;
+
+	return hash(load_day + load_month + load_year);
+}
+
+function checkCookie() {
+	const data = getJSONCookieData(cookie_name);
+
+	if (data && data["seed"] === daily_seed) {
+		solution = data["solution"];
+		guesses = data["guesses"];
+		for (g of guesses) logScore(...g);
+	}
+}
 
 function getPuzzleWord() {
 	let word = "";
 
-	if (query_string === "random") {
-		while (word.length < minAnswer || word.length > maxAnswer) word = opt(common);
-	} else {
-		while (word.length < minAnswer || word.length > maxAnswer) word = popt(common);
-	}
+	while (word.length < minAnswer || word.length > maxAnswer) word = popt(common);
 
 	return word;
 }
@@ -120,6 +150,10 @@ function scoreGuess(guess, answer) {
 	if (score > 0 && score < 1) score = 1;
 	if (score > 99 && score < 100) score = 99;
 
+	append(guesses, [guess, score]);
+
+	setJSONCookie(cookie_name, cookie_data);
+
 	return score;
 }
 
@@ -207,3 +241,5 @@ function drawGameBoard(parent) {
 
 drawGameBoard(Xid("game-panel"));
 drawKeyboard(Xid("game-panel"));
+
+checkCookie();

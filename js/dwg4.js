@@ -25,6 +25,8 @@ if (query_bool) {
 
 Xid("share").href = "?" + seed.toString();
 
+const dictionary = scowl55;
+
 function checkCookie() {
 	const cookieString = document.cookie;
 
@@ -51,7 +53,7 @@ const reverse = x => Array.from(x).map((x,i,a)=>a.at(-1-i)).reduce(sum,"");
 
 const tile_count = 9;
 
-let c6 = common.filter(x=>x.length == 6);
+let c6 = dictionary.filter(x=>x.length == 6);
 let tris_flat = c6.map(x=>([0,1,2,3].map(n=>x.slice(n,n+3)))).flat();
 let tris_set = new Set(tris_flat);
 

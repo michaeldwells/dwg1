@@ -15,10 +15,12 @@ html {
     justify-content: center;
 }
 
+#game-clue {
+    display: flex;
+    justify-content: center;
+}
 .clue-string {
-    float: left;
-    width: 50%;
-    text-align: center;
+    margin-inline: 2em;
     font-weight: 100;
 }
 .clue-string.found {

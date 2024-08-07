@@ -10,53 +10,6 @@ const tridata = createTriData();
 const [word, tri1, tri2] = getPuzzleWord();
 LOG(tri1, tri2, word);
 
-function hashTri(t) {return  676 * (t.charCodeAt(0)-65) + 26 * (t.charCodeAt(1)-65) + (t.charCodeAt(2)-65)}
-
-function createTriData() {
-	const common = new Array(17576);
-	const rare = new Array(17576);
-
-	let s55i = 0;
-	let s80i = 0;
-
-	const ranges = range(100).map((_,i) => range(i));
-
-	while (s80i < scowl80.length) {
-		const w = scowl80[s80i];
-		const commonWord = scowl55[s55i] == w;
-
-		s80i += 1;
-		if (commonWord) s55i += 1;
-
-		if (w.length < 8) continue;
-
-		for (const i in ranges[w.length - 2]) {
-			const t = w.slice(i, i + 3);
-			const th = 676 * (t.charCodeAt(0)-65) + 26 * (t.charCodeAt(1)-65) + (t.charCodeAt(2)-65);
-
-			if (rare[th]) {rare[th].splice(rare[th].length, 0, w);} else {rare[th] = [w];}
-			if (commonWord) {
-				if (common[th]) {common[th].splice(common[th].length, 0, w);} else {common[th] = [w];}
-			}
-		}
-	}
-
-	const cDict = {};
-	const rDict = {};
-
-	const abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-	for (const l1 of abc)
-		for (const l2 of abc)
-			for (const l3 of abc) {
-				const t = l1+l2+l3;
-				const th = 676 * (t.charCodeAt(0)-65) + 26 * (t.charCodeAt(1)-65) + (t.charCodeAt(2)-65);
-				if (common[th]) cDict[t] = common[th];
-				if (rare[th]) rDict[t] = rare[th];
-			}
-
-	return {"common":cDict, "rare":rDict};
-}
-
 function getDailySeed(load_time) {
 	const load_day = load_time.getUTCDate().toString();
 	const load_month = load_time.getUTCMonth().toString();
@@ -74,12 +27,59 @@ function getDailySeed(load_time) {
 	return hash(load_day + load_month + load_year);
 }
 
+//function hashTri(t) {return  676 * (t.charCodeAt(0)-65) + 26 * (t.charCodeAt(1)-65) + (t.charCodeAt(2)-65)}
+
+function createTriData() {
+	const common = new Array(17576);
+	const rare = new Array(17576);
+
+	let s55i = 0;
+	let s80i = 0;
+
+	const ranges = range(100).map((_,i) => range(i));
+
+	while (s80i < scowl80.length) {
+		const w = scowl80[s80i];
+		const commonWord = scowl55[s55i] == w;
+
+		s80i += 1;
+		if (commonWord) s55i += 1;
+
+		if (w.length < 6) continue;
+
+		for (const i in ranges[w.length - 2]) {
+			const t = w.slice(i, i + 3);
+			const th = 676 * (t.charCodeAt(0)-65) + 26 * (t.charCodeAt(1)-65) + (t.charCodeAt(2)-65);
+
+			if (rare[th]) {rare[th].splice(rare[th].length, 0, w);} else {rare[th] = [w];}
+			if (commonWord) {
+				if (common[th]) {common[th].splice(common[th].length, 0, w);} else {common[th] = [w];}
+			}
+		}
+	}
+
+	const cDict = {};
+	const rDict = {};
+
+	const abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+	for (const l1 of abc)
+		for (const l2 of abc)
+			for (const l3 of abc) {
+				const t = l1+l2+l3;
+				const th = 676 * (t.charCodeAt(0)-65) + 26 * (t.charCodeAt(1)-65) + (t.charCodeAt(2)-65);
+				if (common[th]) cDict[t] = common[th];
+				if (rare[th]) rDict[t] = rare[th];
+			}
+
+	return {"common":cDict, "rare":rDict};
+}
+
 function getPuzzleWord() {
 	let t1;
 	let t2 = "";
 	let w;
 
-	const rare_tris = Object.keys(tridata["common"]).filter(x => x.length < 40).filter(x => tridata["common"][x].filter(y => y.length > 8).length > 0);
+	const rare_tris = Object.keys(tridata["common"]).filter(x => x.length < 100).filter(x => tridata["common"][x].filter(y => y.length > 8).length > 0);
 
 	while (t2 == "") {
 		t1 = popt(rare_tris);
@@ -91,11 +91,13 @@ function getPuzzleWord() {
 		w = popt(possible_words);
 		LOG(w);
 
-		similars = [
+		const similars = [
 			w, 
 			w.slice(0,-1), 
 			w.slice(0,-2), 
 			w+"S", 
+			w.slice(0,-1)+"S", 
+			w.slice(0,-2)+"S", 
 			w.slice(0,-1)+"IES", 
 			w+"ED", 
 			w+w[-1]+"ED", 
@@ -107,18 +109,13 @@ function getPuzzleWord() {
 			w.slice(0,-2)+"ING"
 		];
 
-		others = w.split(t1).filter(x => len(x) > 2);
-		LOG(others);
-		other_tris = others.map(x => x.split("").map((y,i) => x.slice(i,i+3))).flat().filter(x => x.length == 3);
-		LOG(other_tris);
+		const others = w.split(t1).filter(x => len(x) > 2);
+		const other_tris = others.map(x => x.split("").map((y,i) => x.slice(i,i+3))).flat().filter(x => x.length == 3);
 
 		const matches = other_tris.map(x => [x, tridata["rare"][x]]);
-		LOG(matches);
 		const shared_matches = matches.map(x => [x[0], x[1].filter((y) => y.includes(t1)).filter(y => similars.reduce((acc,i) => acc && y!==i, true))]);
-		LOG(shared_matches);
 
-		solos = shared_matches.filter(x => x[1].length == 0).map(x => x[0]);
-		LOG(solos);
+		const solos = shared_matches.filter(x => x[1].length == 0).map(x => x[0]);
 
 		if (solos.length > 0) t2 = popt(solos);
 	}

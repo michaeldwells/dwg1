@@ -49,7 +49,7 @@ function getPuzzleWord() {
 	const query_string = window.location.search.substring(1);
 	let word = "";
 
-	while (word.length < 3 || word.length > maxAnswer) word = popt(common);
+	while (word.length < 3 || word.length > maxAnswer) word = popt(scowl40);
 
 	return word;
 }
@@ -143,11 +143,10 @@ function keyboardEnterCallback() {
 
 	if (guess.length < 3) return;
 
-	let i_c = binarySearch(common, guess);
-	let i_r = ((typeof rare !== "undefined") && (binarySearch(rare, guess) >= 0));
-	let i_e = ((typeof epic !== "undefined") && (binarySearch(epic, guess) >= 0));
+	let i_c = binarySearch(scowl40, guess);
+	let i_r = ((typeof scowl80 !== "undefined") && (binarySearch(scowl80, guess) >= 0));
 
-	if (i_c < 0 && !i_r && !i_e) return;
+	if (i_c < 0 && !i_r) return;
 
 	let score = scoreGuess(guess, solution);
 

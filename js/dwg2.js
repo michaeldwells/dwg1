@@ -37,8 +37,32 @@ var guess = [];
 const guesses = [];
 var score = 0;
 
+const block_sizes = [1,2,3,4];
+const shortest_block = M.min(...block_sizes);
+const longest_block = M.max(...block_sizes);
+const longest_word = 22;
+let splits_list = {};
+create_splits_indices(longest_word + 1);
+
+function splits(n) {
+	if (n in splits_list) return splits_list[n];
+	if (n < shortest_block) return [[]];
+	if (n == shortest_block) return [[shortest_block]];
+	return range( M.min(n, longest_block) ).
+		map( x => splits(n - (x + 1)).map(y => [x + 1, ...y]) ).
+		reduce((acc,x)=>[...acc, ...x], []).
+		filter(x => x.filter(y => y === 1).length < 2);
+}
+
+function create_splits_indices(x) {
+	for (const n in range(x)) splits_list[n] = splits(n);
+	for (const s of Object.values(splits_list))
+		for (const i of s.keys())
+			s[i] = [0, ...Array.from(s[i].keys()).map(x => s[i].slice(0, x + 1).reduce(sum,0))];
+}
+
 function get_splits_of_word(w) {
-	return splitsIndices[w.length].map( x=>range_selection[x.length-1].map( i=>w.slice(x[i],x[i+1]) ) )
+	return splits_list[w.length].map( x=>range_selection[x.length-1].map( i=>w.slice(x[i],x[i+1]) ) )
 }
 		
 function rarity(block) {
@@ -300,7 +324,7 @@ function expandTilesGroups(guess, word) {
 
 function submitGuess() {
 	let gParts = guess.map(x => tiles[x].reduce(sum));
-	let gWord = gParts.reduce(sum);
+	let gWord = gParts.reduce(sum, []);
 	let aWord = word.reduce(sum);
 
 	let found = word_trie.contains(gWord);

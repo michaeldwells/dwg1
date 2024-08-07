@@ -47,7 +47,7 @@ function checkCookie() {
 function getPuzzleWord() {
 	let word = "";
 
-	while (word.length < minAnswer || word.length > maxAnswer) word = popt(common);
+	while (word.length < minAnswer || word.length > maxAnswer) word = popt(scowl40);
 
 	return word;
 }
@@ -105,7 +105,7 @@ function longestRun(guess, answer) {
 }
 
 function scoreGuess(guess, answer) {
-	let matchFactor = 0.0;
+	const matchFactor = 0.0;
 
 	let missedAnswer = answer;
 	for (let l of guess) {
@@ -119,10 +119,10 @@ function scoreGuess(guess, answer) {
 		if (i >= 0) missedGuess = missedGuess.substring(0,i) + missedGuess.substring(i+1);
 	}
 
-	let matches = guess.length - missedGuess.length;
+	const matches = guess.length - missedGuess.length;
 	let score = matches * matchFactor;
 
-	let maxLength = M.max(guess.length, answer.length);
+	const maxLength = M.max(guess.length, answer.length);
 
 	for (let x = 0; x < answer.length; x += 1) {
 		for (let r = 0; r < maxLength; r += 1) {
@@ -143,7 +143,7 @@ function scoreGuess(guess, answer) {
 		}
 	}
 
-	let maxScore = answer.length * (matchFactor + 2);
+	const maxScore = answer.length * (matchFactor + 2);
 
 	score = 100.0 * score / maxScore;
 	
@@ -184,7 +184,7 @@ function keyboardCallback(letter) {
 }
 
 function keyboardDelCallback() {
-	let guess = Xid("game-guess").innerHTML;
+	const guess = Xid("game-guess").innerHTML;
 
 	if (guess.length <= 0) return;
 	
@@ -192,31 +192,30 @@ function keyboardDelCallback() {
 }
 
 function keyboardEnterCallback() {
-	let guess = Xid("game-guess").innerHTML.toUpperCase();
+	const guess = Xid("game-guess").innerHTML.toUpperCase();
 
 	if (guess.length < 3) return;
 
-	let found = binarySearch(common, guess) >= 0;
-	found = found || ((typeof rare !== "undefined") && (binarySearch(rare, guess) >= 0));
-	found = found || ((typeof epic !== "undefined") && (binarySearch(epic, guess) >= 0));
+	let found = binarySearch(scowl40, guess) >= 0;
+	found = found || ((typeof rare !== "undefined") && (binarySearch(scowl80, guess) >= 0));
 
 	if (!found) return;
 
-	let score = scoreGuess(guess, solution);
-	let {run, equal} = longestRun(guess, solution);
+	const score = scoreGuess(guess, solution);
+	const {run, equal} = longestRun(guess, solution);
 
 	logScore(guess, score, run, equal);
 
 	if (score == 0) {
-		for (l of guess) {
-			let id = "key-" + l.toLowerCase();
+		for (const l of guess) {
+			const id = "key-" + l.toLowerCase();
 			Xid(id).classList.add("absent");
 		}
 	}
 
 	if (run === guess.length) {
-		for (l of guess) {
-			let id = "key-" + l.toLowerCase();
+		for (const l of guess) {
+			const id = "key-" + l.toLowerCase();
 			Xid(id).classList.add("fixed");
 		}
 	}
@@ -232,9 +231,9 @@ function keyboardEnterCallback() {
 }
 
 function drawGameBoard(parent) {
-	let guess = ["div", {"id":"game-guess"}];
-	let answers = ["div", {"id":"game-answers"}];
-	let board = ["div", {"id":"game-board"}, guess, answers];
+	const guess = ["div", {"id":"game-guess"}];
+	const answers = ["div", {"id":"game-answers"}];
+	const board = ["div", {"id":"game-board"}, guess, answers];
 
 	Xnew(board, parent);
 }

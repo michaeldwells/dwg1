@@ -197,7 +197,7 @@ function keyboardEnterCallback() {
 	if (guess.length < 3) return;
 
 	let found = binarySearch(scowl40, guess) >= 0;
-	found = found || ((typeof rare !== "undefined") && (binarySearch(scowl80, guess) >= 0));
+	found = found || ((typeof scowl80 !== "undefined") && (binarySearch(scowl80, guess) >= 0));
 
 	if (!found) return;
 
